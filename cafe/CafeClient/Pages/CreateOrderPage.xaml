@@ -1,0 +1,36 @@
+﻿<Page x:Class="CafeClient.Pages.CreateOrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Title="Создание заказа">
+
+    <StackPanel Margin="30" Width="300" VerticalAlignment="Center">
+
+        <TextBlock Text="Новый заказ" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+        <TextBlock Text="Выберите стол:" FontSize="16" Margin="0,0,0,5" Foreground="Gray"/>
+
+        <ComboBox x:Name="TableComboBox"
+                  Height="50" 
+                  Margin="0,0,0,20"
+                  FontSize="16"
+                  Padding="10,0"
+                  ItemsSource="{Binding Tables}" 
+                  DisplayMemberPath="DisplayName" 
+                  SelectedItem="{Binding SelectedTable, Mode=TwoWay}"/>
+
+        <Button Content="СОЗДАТЬ ЗАКАЗ"
+                Height="50"
+                FontSize="16"
+                FontWeight="Bold"
+                Click="CreateOrder_Click"/>
+
+        <Button Content="Назад"
+                Margin="0,10"
+                Style="{StaticResource MaterialDesignOutlinedButton}"
+                Click="BackButton_Click"/>
+
+    </StackPanel>
+</Page>

@@ -1,0 +1,130 @@
+﻿<Page x:Class="CafeClient.Pages.OrderDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      d:DesignWidth="1366" d:DesignHeight="768" 
+      Title="Редактирование заказа">
+
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="НАЗАД" 
+                Style="{StaticResource MaterialDesignOutlinedButton}"
+                Click="Back_Button" 
+                HorizontalAlignment="Left" Margin="10,0,0,0"/>
+
+        <TextBlock 
+           Text="УПРАВЛЕНИЕ ЗАКАЗОМ" 
+           FontSize="28" 
+           FontWeight="SemiBold" 
+           Grid.ColumnSpan="2"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
+
+        <materialDesign:Card Grid.Column="0" Grid.Row="1" Margin="10" VerticalAlignment="Top" Padding="15" UniformCornerRadius="8">
+            <Border Padding="15,10" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="{Binding CurrentOrder.OrderId, StringFormat=ЗАКАЗ №{0}}" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Клиент:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="{Binding CurrentOrder.UserName}" FontSize="18" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Столик:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="{Binding CurrentOrder.TableNumber}" FontSize="18" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Статус:" Foreground="Gray" FontSize="12"/>
+                    <Border Background="#E3F2FD" CornerRadius="4" HorizontalAlignment="Left" Padding="8" Margin="0,10,0,0">
+                        <TextBlock Text="{Binding CurrentOrder.Status}" FontWeight="Bold" Foreground="#1565C0"/>
+                    </Border>
+
+                    <Separator Margin="0,10"/>
+
+                    <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="Gray"/>
+                    <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="Green" Margin="0,0,0,20"/>
+
+                    <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="5" Background="Green" BorderBrush="Green" Click="Buy_Button"/>
+                    <Button x:Name="BtnEditStatus" Content="СМЕНИТЬ СТАТУС" Margin="5" Click="Edit_Button"/>
+                    <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
+                </StackPanel>
+            </Border>
+        </materialDesign:Card>
+
+        <materialDesign:Card Grid.Column="1" Grid.Row="1" Margin="10" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#F5F5F5" Padding="15,10" BorderBrush="#E0E0E0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="БЛЮДО" FontWeight="Bold" Foreground="Gray"/>
+                        <TextBlock Grid.Column="1" Text="ЦЕНА" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Text="КОЛ-ВО" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="СУММА" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Right"/>
+                    </Grid>
+                </Border>
+
+                <ListView Grid.Row="1" ItemsSource="{Binding CurrentOrder.Items}" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          HorizontalContentAlignment="Stretch" Padding="0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#F0F0F0" BorderThickness="0,0,0,1" Padding="15,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="{Binding MenuItemName}" 
+                                               FontSize="16" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding UnitPrice, StringFormat={}{0:N0}}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray"/>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding Quantity}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+                                    <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat={}{0:N0} ₽}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold"/>
+
+                                    <Button Grid.Column="4"
+                                            Style="{StaticResource MaterialDesignIconButton}"
+                                            ToolTip="Удалить позицию"
+                                            Click="DeleteOrderItem_Click"
+                                            Foreground="Red"
+                                            Width="30" Height="30"
+                                            HorizontalAlignment="Right">
+                                        <materialDesign:PackIcon Kind="Delete"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</Page>

@@ -1,0 +1,63 @@
+﻿<Page x:Class="CafeClient.Pages.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      d:DesignHeight="450"
+      d:DesignWidth="800"
+      Background="White"
+      Title="Авторизация">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="1" Background="#F5F5F5"/>
+
+        <StackPanel Grid.Column="1"
+                    Width="350"                    
+                    Height="400">
+
+            <TextBlock Text="Войдите в свою учетную запись"
+                       Margin="13,0,0,20"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
+            <TextBox
+                Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                AutomationProperties.Name="LoginField"
+                FontSize="20"
+                FontWeight="Medium"
+                Margin="10"
+                materialDesign:HintAssist.Hint="Login"
+                materialDesign:HintAssist.IsFloating="True"
+                materialDesign:TextFieldAssist.DecorationVisibility="Visible"/>
+
+            <PasswordBox
+                x:Name="UserPasswordBox"
+                Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                AutomationProperties.Name="PasswordField"
+                FontSize="20"
+                FontWeight="Medium"
+                Margin="10"
+                materialDesign:HintAssist.Hint="Password"
+                materialDesign:HintAssist.IsFloating="True"
+                materialDesign:TextFieldAssist.DecorationVisibility="Visible"/>
+
+            <Button
+                Command="{Binding LoginCommand}"
+                CommandParameter="{Binding ElementName=UserPasswordBox}" 
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Width="300"
+                Height="45"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Content="ВХОД" Click="Button_Click"/>
+
+        </StackPanel>
+    </Grid>
+</Page>

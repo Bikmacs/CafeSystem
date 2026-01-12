@@ -1,0 +1,1 @@
+﻿DBCC CHECKIDENT ('MenuItems', RESEED, 0);
