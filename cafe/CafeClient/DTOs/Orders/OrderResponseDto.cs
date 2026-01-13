@@ -11,7 +11,7 @@ namespace CafeClient.DTOs
         public int UserId { get; set; }
         public int? TableNumber { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string Status { get; set; } = "Создан";
+        public string Status { get; set; }
         public decimal TotalAmount { get; set; }
         public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
     }

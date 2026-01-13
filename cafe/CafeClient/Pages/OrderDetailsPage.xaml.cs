@@ -71,13 +71,11 @@ namespace CafeClient.Pages
             if (isClosed)
             {
                 if (BtnPay != null) BtnPay.Visibility = Visibility.Collapsed;
-                if (BtnEditStatus != null) BtnEditStatus.Visibility = Visibility.Collapsed;
                 if (BtnDeleteOrder != null) BtnDeleteOrder.Visibility = Visibility.Collapsed;
             }
             else
             {
                 if (BtnPay != null) BtnPay.Visibility = Visibility.Visible;
-                if (BtnEditStatus != null) BtnEditStatus.Visibility = Visibility.Visible;
                 if (BtnDeleteOrder != null) BtnDeleteOrder.Visibility = Visibility.Visible;
             }
         }

@@ -53,7 +53,6 @@
                     <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="Green" Margin="0,0,0,20"/>
 
                     <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="5" Background="Green" BorderBrush="Green" Click="Buy_Button"/>
-                    <Button x:Name="BtnEditStatus" Content="СМЕНИТЬ СТАТУС" Margin="5" Click="Edit_Button"/>
                     <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
                 </StackPanel>
             </Border>

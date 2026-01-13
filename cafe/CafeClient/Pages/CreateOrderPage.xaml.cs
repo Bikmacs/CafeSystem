@@ -98,7 +98,7 @@ namespace CafeClient.Pages
             {
                 UserId = CurrentUser.UserId,
                 TableNumber = SelectedTable.TableNumber,
-                Status = "Открыт",
+                Status = "Готовится",
                 Items = new List<CreateOrderItemDto>()
             };
 

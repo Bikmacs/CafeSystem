@@ -17,6 +17,8 @@ namespace CafeAPI.Repositories
         {
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();
+
+
         }
 
         public async Task DeleteMenuItemAsync(MenuItem menuItem)

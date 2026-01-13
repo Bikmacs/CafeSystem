@@ -7,31 +7,33 @@
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
       Title="Кухонный Экран"
-      Loaded="Page_Loaded" Unloaded="Page_Unloaded"
-      Background="Gainsboro">
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded">
 
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"> 
+        <Grid Grid.Row="0">
             <Menu VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Black" Foreground="White">
                 <MenuItem Header="Навигация">
                     <MenuItem Header="Назад" Click="BackMenuItem_Click" Foreground="Black"/>
                     <MenuItem Header="Выход" Click="ExitMenuItem_Click" Foreground="Black"/>
                 </MenuItem>
-                
+
             </Menu>
 
         </Grid>
 
         <Grid Grid.Row="1" Margin="20">
-            
-            <TextBlock Text="ЗАКАЗЫ В РАБОТЕ" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left"/>
-            <TextBlock x:Name="ClockTextBlock" Foreground="Black" FontSize="32" FontWeight="Bold" HorizontalAlignment="Right"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="ЗАКАЗЫ В РАБОТЕ" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+            <TextBlock x:Name="ClockTextBlock" Foreground="Black" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" Grid.Column="1" Margin="1824,0,0,0"/>
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly">

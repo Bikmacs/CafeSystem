@@ -9,7 +9,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=cafedb;Database=CafeDb;User Id=sa;Password=Bikmacs_2025!;TrustServerCertificate=True;
     ports:
-      - "8080:8080"
+      - "8080:8080" 
     depends_on:
       - cafedb
 

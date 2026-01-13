@@ -1,4 +1,5 @@
 ﻿using CafeClient.DTOs;
+using CafeClient.DTOs.Menu;
 using CafeClient.DTOs.Orders;
 using CafeClient.DTOs.User;
 using System;
@@ -250,6 +251,35 @@ namespace CafeClient.Services
                 return null;
             }
         }
+
+        public async Task<bool> AddMenuAsync(CreateMenuItemDto dto)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Menu/Add", dto);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ОШИБКА ДОБАВЛЕНИЯ БЛЮДА: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteMenuItemAsync(int id)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/Menu/{id}/DeleteItem");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ОШИБКА УДАЛЕНИЯ БЛЮДА: {ex.Message}");
+                return false;
+            }
+        }
+
         public void Logout()
         {
             if (_httpClient.DefaultRequestHeaders.Contains("Authorization"))

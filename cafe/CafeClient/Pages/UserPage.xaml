@@ -115,6 +115,8 @@
                 <Button Content="СОХРАНИТЬ / ДОБАВИТЬ" 
                          Click="Button_Click_1"
                          Height="45"
+                         Background="White" 
+                         Foreground="Green" 
                          Margin="0,0,0,10"/>
 
                 <Button Content="УДАЛИТЬ ВЫБРАННОГО" 

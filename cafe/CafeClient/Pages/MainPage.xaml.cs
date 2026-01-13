@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace CafeClient.Pages
 {
@@ -18,6 +19,8 @@ namespace CafeClient.Pages
         private ICollectionView _menuView;
         private string _searchText = "";
         private string _currentCategory = null;
+        private DispatcherTimer _orderTimer;
+        private bool _isRefreshingOrders = false;
 
         public MainPage(ApiService apiService, bool isCookies)
         {
@@ -29,11 +32,27 @@ namespace CafeClient.Pages
 
             if (!isCookies)
                 ButtonUser.Visibility = Visibility.Collapsed;
+
+            _orderTimer = new DispatcherTimer();
+            _orderTimer.Interval = TimeSpan.FromSeconds(10);
+            _orderTimer.Tick += OrderTimer_Tick;
+
+            this.Unloaded += MainPage_Unloaded;
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             await LoadData();
+
+            _orderTimer.Start();
+        }
+
+        private void MainPage_Unloaded(object? sender, RoutedEventArgs e)
+        {
+            if (_orderTimer.IsEnabled)
+            {
+                _orderTimer.Stop();
+            }
         }
 
         private async Task LoadData()
@@ -115,29 +134,27 @@ namespace CafeClient.Pages
             }
         }
 
-        
         private async void AddToCart_Click(object sender, RoutedEventArgs e)
         {
-            //Получаем выбранный пункт меню из контекста кнопки    
             var button = sender as Button;
             var menuItem = button?.DataContext as MenuItemResponseDto;
             if (menuItem == null) return;
-            //Получаем выбранный заказ из списка заказов
+
             var selectedOrder = OrdersListView.SelectedItem as OrderResponseDto;
             if (selectedOrder == null)
             {
                 MessageBox.Show("Сначала выберите активный заказ в списке слева!",
-                    "Внимание", 
+                    "Внимание",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
                 return;
             }
-            //Создаем DTO для добавления пункта в заказ
+
             var itemsToAdd = new List<CreateOrderItemDto>
             {
                 new CreateOrderItemDto { MenuItemId = menuItem.MenuItemId, Quantity = 1 }
             };
-            //Вызываем API для добавления пункта в заказ
+
             bool success = await _apiService.AddItemsToOrderAsync(selectedOrder.OrderId, itemsToAdd);
             if (success)
             {
@@ -148,6 +165,43 @@ namespace CafeClient.Pages
             {
                 MessageBox.Show("Не удалось добавить блюдо. Возможно, заказ закрыт или удален.");
             }
+        }
+
+        private async Task LoadOrders()
+        {
+            if (_isRefreshingOrders) return;
+
+            _isRefreshingOrders = true;
+            try
+            {
+                var MainOrders = await _apiService.GetAllOrdersAsync();
+
+                if (MainOrders != null)
+                {
+                    OrdersListView.ItemsSource = MainOrders
+                        .Where(o => o.Status != "Закрыт" && o.Status != "Оплачен")
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToList();
+
+                    HistoryListView.ItemsSource = MainOrders
+                        .Where(o => o.Status == "Закрыт" || o.Status == "Оплачен")
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _isRefreshingOrders = false;
+            }
+        }
+
+        private async void OrderTimer_Tick(object sender, EventArgs e)
+        {
+            await LoadOrders();
         }
 
         private void RestoreSelection(int orderId)
@@ -183,6 +237,11 @@ namespace CafeClient.Pages
         private void OpenKitchen_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new KitchenPage(_apiService));
+        }
+
+        private void AddMenu_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new MenuPage(_apiService));
         }
     }
 }

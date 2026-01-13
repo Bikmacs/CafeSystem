@@ -60,7 +60,7 @@ namespace CafeAPI.Services
                 UserId = orderDto.UserId,
                 TableNumber = orderDto.TableNumber,
                 Status = orderDto.Status,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow.AddHours(5)
             };
             //Добавляем блюда в заказ
             foreach (var item in orderDto.Items)
