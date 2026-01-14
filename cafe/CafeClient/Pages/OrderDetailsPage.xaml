@@ -8,7 +8,7 @@
       d:DesignWidth="1366" d:DesignHeight="768" 
       Title="Редактирование заказа">
 
-    <Grid Grid.Row="1">
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="450"/>
             <ColumnDefinition Width="*"/>
@@ -23,58 +23,61 @@
                 Click="Back_Button" 
                 HorizontalAlignment="Left" Margin="10,0,0,0"/>
 
-        <TextBlock 
-           Text="УПРАВЛЕНИЕ ЗАКАЗОМ" 
-           FontSize="28" 
-           FontWeight="SemiBold" 
-           Grid.ColumnSpan="2"
-           HorizontalAlignment="Center"
-           VerticalAlignment="Center"/>
+        <TextBlock Text="УПРАВЛЕНИЕ ЗАКАЗОМ" 
+                   FontSize="28" 
+                   FontWeight="SemiBold" 
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
 
         <materialDesign:Card Grid.Column="0" Grid.Row="1" Margin="10" VerticalAlignment="Top" Padding="15" UniformCornerRadius="8">
             <Border Padding="15,10" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8">
                 <StackPanel>
                     <TextBlock Text="{Binding CurrentOrder.OrderId, StringFormat=ЗАКАЗ №{0}}" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
-
                     <TextBlock Text="Клиент:" Foreground="Gray" FontSize="12"/>
                     <TextBlock Text="{Binding CurrentOrder.UserName}" FontSize="18" Margin="0,0,0,10"/>
-
                     <TextBlock Text="Столик:" Foreground="Gray" FontSize="12"/>
                     <TextBlock Text="{Binding CurrentOrder.TableNumber}" FontSize="18" Margin="0,0,0,10"/>
-
                     <TextBlock Text="Статус:" Foreground="Gray" FontSize="12"/>
-                    <Border Background="#E3F2FD" CornerRadius="4" HorizontalAlignment="Left" Padding="8" Margin="0,10,0,0">
+                    <Border Background="#E3F2FD" CornerRadius="4" HorizontalAlignment="Left" Padding="8" Margin="0,5,0,0">
                         <TextBlock Text="{Binding CurrentOrder.Status}" FontWeight="Bold" Foreground="#1565C0"/>
                     </Border>
-
-                    <Separator Margin="0,10"/>
-
+                    <Separator Margin="0,15"/>
                     <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="Gray"/>
                     <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="Green" Margin="0,0,0,20"/>
 
-                    <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="5" Background="Green" BorderBrush="Green" Click="Buy_Button"/>
-                    <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
+                    <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="0,5" Background="Green" BorderBrush="Green" Click="Buy_Button"/>
+                    <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="0,5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
+
+                    <Separator Margin="0,15"/>
+                    <Button Content="ВЫДЕЛЕННОЕ В НОВЫЙ ЧЕК" 
+                            Style="{StaticResource MaterialDesignOutlinedButton}"  
+                            Margin="0,5"
+                            Click="AddBill_Button"
+                            ToolTip="Переместить отмеченные галочкой блюда в отдельный чек"/>
                 </StackPanel>
             </Border>
         </materialDesign:Card>
 
-        <materialDesign:Card Grid.Column="1" Grid.Row="1" Margin="10" Padding="0">
+        <materialDesign:Card Grid.Column="1" Grid.Row="1" Margin="10" Padding="0" UniformCornerRadius="8">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1.5*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="#F5F5F5" Padding="15,10" BorderBrush="#E0E0E0">
+                <Border Grid.Row="0" Background="#F5F5F5" Padding="15,10" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-
                         <TextBlock Grid.Column="0" Text="БЛЮДО" FontWeight="Bold" Foreground="Gray"/>
                         <TextBlock Grid.Column="1" Text="ЦЕНА" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Text="КОЛ-ВО" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Center"/>
@@ -93,36 +96,99 @@
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="1*"/>
                                         <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{Binding MenuItemName}" 
-                                               FontSize="16" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center"/>
-
-                                    <TextBlock Grid.Column="1" Text="{Binding UnitPrice, StringFormat={}{0:N0}}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray"/>
-
-                                    <TextBlock Grid.Column="2" Text="{Binding Quantity}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
-
-                                    <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat={}{0:N0} ₽}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold"/>
-
-                                    <Button Grid.Column="4"
-                                            Style="{StaticResource MaterialDesignIconButton}"
-                                            ToolTip="Удалить позицию"
-                                            Click="DeleteOrderItem_Click"
-                                            Foreground="Red"
-                                            Width="30" Height="30"
-                                            HorizontalAlignment="Right">
+                                    <TextBlock Grid.Column="0" Text="{Binding MenuItemName}" FontSize="16" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding UnitPrice, StringFormat={}{0:N0}}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Quantity}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat={}{0:N0} ₽}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold"/>
+                                    <Button Grid.Column="5" Style="{StaticResource MaterialDesignIconButton}" Click="DeleteOrderItem_Click" Foreground="Red" Width="30" Height="30" HorizontalAlignment="Right">
                                         <materialDesign:PackIcon Kind="Delete"/>
                                     </Button>
+                                    <CheckBox Grid.Column="4" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" Background="#E0E0E0"/>
+
+                <TabControl Grid.Row="3"
+                            ItemsSource="{Binding CurrentOrder.Bills}"
+                            Margin="0"
+                            Padding="0"
+                            Style="{StaticResource MaterialDesignTabControl}"
+                            materialDesign:ColorZoneAssist.Mode="Standard"
+                            Background="#F0F0F0">
+
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <materialDesign:PackIcon Kind="Receipt" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding Id, StringFormat=ЧЕК #{0}}" FontWeight="Bold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <Grid Background="#EEEEEE">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="500" Margin="10">
+                                    <materialDesign:Card Padding="0" UniformCornerRadius="4">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0" Background="#333" Padding="10">
+                                                <TextBlock Text="{Binding Id, StringFormat=СЧЕТ № {0}}" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                            </Border>
+                                            <ListView Grid.Row="1" ItemsSource="{Binding Items}" 
+                                                  BorderThickness="0" 
+                                                  HorizontalContentAlignment="Stretch"
+                                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                  MaxHeight="300">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0,4">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="80"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock Grid.Column="0" Text="{Binding MenuItemName}" TextWrapping="Wrap"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding Quantity, StringFormat=x{0}}" Foreground="Gray" Margin="10,0"/>
+                                                            <TextBlock Grid.Column="2" Text="{Binding TotalPrice, StringFormat={}{0:N0} ₽}" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            <StackPanel Grid.Row="2" Background="#FAFAFA" >
+                                                <DockPanel LastChildFill="False">
+                                                    <TextBlock Text="ИТОГО ПО ЧЕКУ:" FontWeight="Bold"/>
+                                                    <TextBlock Text="{Binding TotalAmount, StringFormat={}{0:N0} ₽}" DockPanel.Dock="Right" FontWeight="Bold" FontSize="16" Foreground="Black"/>
+                                                </DockPanel>
+
+                                                <Button Content="УДАЛИТЬ ЧЕК"
+                                                    Margin="0,15,0,0"
+                                                    Style="{StaticResource MaterialDesignOutlinedButton}" 
+                                                    BorderBrush="Red" Foreground="Red"
+                                                    Click="DeleteBill_Click"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </materialDesign:Card>
+                                </ScrollViewer>
+                            </Grid>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
             </Grid>
         </materialDesign:Card>
     </Grid>

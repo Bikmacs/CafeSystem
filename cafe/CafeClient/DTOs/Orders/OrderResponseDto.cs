@@ -1,6 +1,7 @@
 ﻿using CafeClient.DTOs.Orders;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace CafeClient.DTOs
 {
@@ -13,6 +14,7 @@ namespace CafeClient.DTOs
         public DateTime CreatedAt { get; set; }
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
-        public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
+        public ObservableCollection<OrderItemDto> Items { get; set; } = new();
+        public ObservableCollection<BillDto> Bills { get; set; } = new();
     }
 }

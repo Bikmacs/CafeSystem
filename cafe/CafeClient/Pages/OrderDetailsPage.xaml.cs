@@ -188,10 +188,52 @@ namespace CafeClient.Pages
             catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}"); }
         }
 
+        private void AddBill_Button(object sender, RoutedEventArgs e)
+        {
+            var selected = CurrentOrder.Items.Where(i => i.IsSelected).ToList();
+            if (!selected.Any())
+            {
+                MessageBox.Show("Пожалуйста, выберите хотя бы один элемент для создания счёта.");
+                return;
+            }
+
+            var bill = new BillDto { Id = CurrentOrder.Bills.Count + 1 };
+
+            CurrentOrder.Bills.Add(bill);
+
+            foreach (var item in selected)
+            {
+                item.IsSelected = false;
+                bill.Items.Add(item);
+                CurrentOrder.Items.Remove(item);
+            }
+
+            OnPropertyChanged(nameof(CurrentOrder));
+
+        }
+
+        private void DeleteBill_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is BillDto bill)
+            {
+                foreach (var item in bill.Items)
+                {
+                    CurrentOrder.Items.Add(item);
+                }
+
+                CurrentOrder.Bills.Remove(bill);
+            }
+        }
+
         private void NumericOnly(object sender, TextCompositionEventArgs e) => e.Handled = IsTextNumeric(e.Text);
         private static bool IsTextNumeric(string text) => new Regex("[^0-9]+").IsMatch(text);
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         protected void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
