@@ -1,4 +1,5 @@
-﻿using CafeAPI.DTOs.MenuItems;
+﻿using CafeAPI.DTOs.Category;
+using CafeAPI.DTOs.MenuItems;
 using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Models;
 using CafeAPI.Repositories;
@@ -14,10 +15,12 @@ namespace CafeAPI.Controllers
     public class MenuController : ControllerBase
     {
         private readonly IMenuItemRepository _menuItemRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public MenuController(IMenuItemRepository menuItemRepository)
+        public MenuController(IMenuItemRepository menuItemRepository, ICategoryRepository categoryRepository)
         {
             _menuItemRepository = menuItemRepository;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet("GetMenu")]
@@ -143,5 +146,20 @@ namespace CafeAPI.Controllers
 
             return Ok(responseDto);
         }
+
+        [HttpGet("/Category")]
+        public async Task<ActionResult<List<CategoryDto>>> GetAll()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+
+            var result = categories.Select(c => new CategoryDto
+            {
+                Id = c.CategoryId,
+                Name = c.Name
+            });
+
+            return Ok(result);
+        }
+
     }
 }

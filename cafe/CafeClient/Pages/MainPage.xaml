@@ -63,7 +63,7 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <materialDesign:Card Padding="10" UniformCornerRadius="6">
+                                <materialDesign:Card Padding="10" UniformCornerRadius="6"  Width="170">
                                     <StackPanel>
                                         <TextBlock Margin="5" Text="{Binding TableNumber, StringFormat=Столик №{0}}" FontWeight="Bold" FontSize="25"/>
                                         <TextBlock Margin="5" Text="{Binding UserName}" FontSize="16" FontWeight="SemiBold" Foreground="DimGray"/>
@@ -99,7 +99,7 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <materialDesign:Card Margin="5" Padding="15" UniformCornerRadius="6" Background="#F5F5F5" Width="185">
+                                <materialDesign:Card Margin="5" Padding="15" UniformCornerRadius="6" Background="#F5F5F5" Width="170">
                                     <StackPanel>
                                         <TextBlock Margin="5" Text="{Binding TableNumber, StringFormat=Столик №{0}}" FontWeight="Bold" FontSize="23" Foreground="Gray"/>
                                         <TextBlock Margin="5" Text="{Binding UserName}" FontSize="16" Foreground="Gray"/>
@@ -121,13 +121,16 @@
                 <TextBlock DockPanel.Dock="Top" Text="Категории" HorizontalAlignment="Center" FontSize="30" FontWeight="SemiBold" Margin="5"/>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <WrapPanel Margin="5" HorizontalAlignment="Center">
-                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Пицца" Tag="Пицца" Click="CategoryButton_Click"/>
-                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Напитки" Tag="Напитки" Click="CategoryButton_Click"/>
-                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Десерты" Tag="Десерты" Click="CategoryButton_Click"/>
                         <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Супы" Tag="Супы" Click="CategoryButton_Click"/>
                         <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Салаты" Tag="Салаты" Click="CategoryButton_Click"/>
-                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Горячее" Tag="Горячее" Click="CategoryButton_Click"/>
                         <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Закуски" Tag="Закуски" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Пицца" Tag="Пицца" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Паста" Tag="Паста" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Десерты" Tag="Десерты" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Напитки" Tag="Напитки" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Гарниры" Tag="Гарниры" Click="CategoryButton_Click"/>
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Соусы" Tag="Соусы" Click="CategoryButton_Click"/>
+
                     </WrapPanel>
 
                 </ScrollViewer>

@@ -7,98 +7,96 @@
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
       Title="Кухонный Экран"
-      Background="White"
+      Background="#EEEEEE"
       Loaded="Page_Loaded" Unloaded="Page_Unloaded">
 
     <Grid>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Menu VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Black" Foreground="White">
-                <MenuItem Header="Навигация">
-                    <MenuItem Header="Назад" Click="BackMenuItem_Click" Foreground="Black"/>
-                    <MenuItem Header="Выход" Click="ExitMenuItem_Click" Foreground="Black"/>
-                </MenuItem>
+        <Border Grid.Row="0" Background="#212121" Padding="20,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Content="НАЗАД" Click="BackMenuItem_Click"/>
+                </StackPanel>
 
-            </Menu>
+                <TextBlock Text="КУХОННЫЙ ТЕРМИНАЛ" 
+                           Foreground="White" 
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
 
-        </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ClockOutline" Foreground="White" Width="30" Height="30" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock x:Name="ClockTextBlock" Text="00:00:00" Foreground="White" FontSize="32" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="1" Margin="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="ЗАКАЗЫ В РАБОТЕ" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-            <TextBlock x:Name="ClockTextBlock" Foreground="Black" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" Grid.Column="1" Margin="1824,0,0,0"/>
-        </Grid>
-
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly">
-
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="10">
             <ItemsControl x:Name="KitchenListView">
+
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <materialDesign:Card Width="320" Margin="15" UniformCornerRadius="8" Background="White">
+                        <materialDesign:Card Width="350" Margin="10" UniformCornerRadius="8" Background="White">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <StackPanel Grid.Row="0">
-                                    <Border Background="#424242" Padding="10">
-                                        <DockPanel>
-                                            <TextBlock Text="{Binding TableNumber, StringFormat=Стол #{0}}" Foreground="White" FontSize="24" FontWeight="Bold" DockPanel.Dock="Left"/>
-                                            <TextBlock Text="{Binding CreatedAt, StringFormat=HH:mm}" Foreground="White" FontSize="24" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-                                        </DockPanel>
+                                    <Border Background="#424242" Padding="15,10">
+                                        <Grid>
+                                            <TextBlock Text="{Binding TableNumber, StringFormat=СТОЛ #{0}}" 
+                                                       Foreground="White" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                                            <Border Background="#D32F2F" CornerRadius="4" Padding="8,2" HorizontalAlignment="Right">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="TimerSand" Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                    <TextBlock Text="{Binding WaitingTime}" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
                                     </Border>
-
-                                    <ItemsControl ItemsSource="{Binding Items}" Margin="10">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0,5">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <Border Grid.Column="0" Background="#D32F2F" CornerRadius="4" Width="35" Height="35" Margin="0,0,10,0">
-                                                        <TextBlock Text="{Binding Quantity}" 
-                                                            Foreground="White" 
-                                                            FontWeight="Bold" 
-                                                            FontSize="20" 
-                                                            HorizontalAlignment="Center" 
-                                                            VerticalAlignment="Center"/>
-                                                    </Border>
-
-                                                    <TextBlock Grid.Column="1" 
-                                                       Text="{Binding MenuItemName}" 
-                                                       FontSize="20" 
-                                                       FontWeight="SemiBold" 
-                                                       TextWrapping="Wrap" 
-                                                       VerticalAlignment="Center"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
                                 </StackPanel>
 
-                                <Border Grid.Row="1" Background="#EEEEEE" Padding="8">
-                                    <TextBlock Text="{Binding Status}" 
-                                           FontSize="18" 
-                                           FontWeight="Bold" 
-                                           HorizontalAlignment="Center" 
-                                           Foreground="Black"/>
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Items}" Margin="10" MinHeight="100">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border Grid.Column="0" Background="#D32F2F" CornerRadius="4" Width="40" Height="40" Margin="0,0,15,0">
+                                                    <TextBlock Text="{Binding Quantity}" Foreground="White" FontWeight="Bold" FontSize="22" 
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+
+                                                <TextBlock Grid.Column="1" Text="{Binding MenuItemName}" FontSize="18" FontWeight="Medium" 
+                                                           TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Grid.Row="2" Background="#EEEEEE" Padding="10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="{Binding Status}" FontWeight="Bold" Foreground="#1976D2" VerticalAlignment="Center" FontSize="16"/>
+
+                                    </DockPanel>
                                 </Border>
                             </Grid>
                         </materialDesign:Card>

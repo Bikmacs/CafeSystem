@@ -1,10 +1,12 @@
-﻿using CafeClient.DTOs.Orders;
+﻿using CafeClient.DTOs;
+using CafeClient.DTOs.Orders;
 using CafeClient.Services;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace CafeClient.Pages
@@ -12,19 +14,19 @@ namespace CafeClient.Pages
     public partial class KitchenPage : Page
     {
         private readonly ApiService _apiService;
-
-        private DispatcherTimer _orderTimer; 
-        private DispatcherTimer _clockTimer; 
+        private DispatcherTimer _dataRefreshTimer;
+        private DispatcherTimer _clockTimer;
 
         public KitchenPage(ApiService apiService)
         {
             InitializeComponent();
             _apiService = apiService;
 
-            _orderTimer = new DispatcherTimer();
-            _orderTimer.Interval = TimeSpan.FromSeconds(10);
-            _orderTimer.Tick += OrderTimer_Tick;
+            _dataRefreshTimer = new DispatcherTimer();
+            _dataRefreshTimer.Interval = TimeSpan.FromSeconds(10);
+            _dataRefreshTimer.Tick += async (s, e) => await LoadKitchenOrders();
 
+            // таймер часов
             _clockTimer = new DispatcherTimer();
             _clockTimer.Interval = TimeSpan.FromSeconds(1);
             _clockTimer.Tick += ClockTimer_Tick;
@@ -32,35 +34,37 @@ namespace CafeClient.Pages
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            UpdateClock();
+            UpdateTopClock();
             await LoadKitchenOrders();
 
-            _orderTimer.Start();
+            _dataRefreshTimer.Start();
             _clockTimer.Start();
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            _orderTimer.Stop();
+            _dataRefreshTimer.Stop();
             _clockTimer.Stop();
         }
 
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
-            UpdateClock();
-        }
-
-        private async void OrderTimer_Tick(object sender, EventArgs e)
-        {
-            await LoadKitchenOrders();
-        }
-
-        private void UpdateClock()
-        {
-            if (ClockTextBlock != null)
+            UpdateTopClock();
+            if (KitchenListView.ItemsSource is IEnumerable<object> items)
             {
-                ClockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+                foreach (var item in items)
+                {
+                    if (item is OrderResponseDto order)
+                    {
+                        order.UpdateTimeUI();
+                    }
+                }
             }
+        }
+
+        private void UpdateTopClock()
+        {
+            ClockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
         }
 
         private async Task LoadKitchenOrders()
@@ -76,7 +80,7 @@ namespace CafeClient.Pages
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки кухни: {ex.Message}");
             }
         }
 
@@ -84,13 +88,6 @@ namespace CafeClient.Pages
         {
             if (NavigationService.CanGoBack)
                 NavigationService.GoBack();
-            else
-                NavigationService.Navigate(new MainPage(_apiService, false));
-        }
-
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
     }
 }

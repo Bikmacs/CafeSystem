@@ -1,4 +1,5 @@
 ﻿using CafeClient.DTOs;
+using CafeClient.DTOs.Category;
 using CafeClient.DTOs.Menu;
 using CafeClient.Services;
 using System;
@@ -33,31 +34,43 @@ namespace CafeClient.Pages
             set { _items = value; OnPropertyChanged(); }
         }
 
-        private List<SimpleCategory> _categories;
-        public List<SimpleCategory> Categories
+        private List<CategoryDto> _categories;
+        public List<CategoryDto> Categories
         {
             get => _categories;
             set { _categories = value; OnPropertyChanged(); }
         }
+
 
         public MenuPage(ApiService apiService)
         {
             InitializeComponent();
             _apiService = apiService;
             DataContext = this;
-            Categories = new List<SimpleCategory>
-            {
-                new SimpleCategory { Id = 1, Name = "Пицца" },
-                new SimpleCategory { Id = 2, Name = "Напитки" },
-                new SimpleCategory { Id = 3, Name = "Десерты" },
-                new SimpleCategory { Id = 4, Name = "Супы" },
-                new SimpleCategory { Id = 5, Name = "Салаты" },
-                new SimpleCategory { Id = 6, Name = "Горячее" },
-                new SimpleCategory { Id = 7, Name = "Закуски" }
-            };
 
-            Loaded += async (s, e) => await LoadData();
+            Loaded += MenuPage_Loaded;
         }
+
+        private async void MenuPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadCategories();
+            await LoadData();
+        }
+
+        private async Task LoadCategories()
+        {
+            try
+            {
+                Categories = await _apiService.GetCategoriesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка загрузки категорий: " + ex.Message);
+            }
+        }
+
+
+
 
         private async Task LoadData()
         {

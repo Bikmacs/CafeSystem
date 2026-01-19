@@ -1,4 +1,5 @@
 ﻿using CafeClient.DTOs;
+using CafeClient.DTOs.Category;
 using CafeClient.DTOs.Menu;
 using CafeClient.DTOs.Orders;
 using CafeClient.DTOs.User;
@@ -279,6 +280,12 @@ namespace CafeClient.Services
                 return false;
             }
         }
+
+        public async Task<List<CategoryDto>> GetCategoriesAsync()
+        {
+            return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("Category");
+        }
+
 
         public void Logout()
         {
