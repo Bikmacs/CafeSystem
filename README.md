@@ -37,8 +37,8 @@
 - **MS SQL Server**
 - **Entity Framework Core** (Code First)
 - **JWT + BCrypt**
-- Swagger
-- Docker
+- **Swagger**
+- **Docker**
 
 ### Frontend
 - **WPF** (.NET 9)
