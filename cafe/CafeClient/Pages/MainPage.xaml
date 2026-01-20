@@ -39,7 +39,7 @@
             <Button Grid.Column="2" Height="40" Margin="5" Content="Обновить" Click="RefreshButton_Click"/>
             <Button x:Name="ButtonMenu" Grid.Column="3" Height="40" Margin="5" Content="Управление меню" Click="AddMenu_Click"/>
             <Button x:Name="ButtonUser" Grid.Column="4" Height="40" Margin="5" Content="Пользователи" Click="Button_Click"/>
-            <Button Grid.Column="5" Height="40" Margin="5" Content="Экран кухни" Click="OpenKitchen_Click"/>
+            <Button x:Name="ButtonKitchen" Grid.Column="5" Height="40" Margin="5" Content="Экран кухни" Click="OpenKitchen_Click"/>
             <Button Grid.Column="6" Height="40" Margin="5" Content="Выйти" Click="LogoutButton_Click" Background="#D32F2F" BorderBrush="#D32F2F"/>
         </Grid> 
 
@@ -63,7 +63,7 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <materialDesign:Card Padding="10" UniformCornerRadius="6"  Width="170">
+                                <materialDesign:Card Padding="10" UniformCornerRadius="6"  Width="185">
                                     <StackPanel>
                                         <TextBlock Margin="5" Text="{Binding TableNumber, StringFormat=Столик №{0}}" FontWeight="Bold" FontSize="25"/>
                                         <TextBlock Margin="5" Text="{Binding UserName}" FontSize="16" FontWeight="SemiBold" Foreground="DimGray"/>

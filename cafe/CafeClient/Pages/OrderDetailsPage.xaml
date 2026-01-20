@@ -50,7 +50,9 @@
                     <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="0,5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
 
                     <Separator Margin="0,15"/>
-                    <Button Content="ВЫДЕЛЕННОЕ В НОВЫЙ ЧЕК" 
+
+                    <Button x:Name="BtnSplitBill" 
+                            Content="ВЫДЕЛЕННОЕ В НОВЫЙ ЧЕК" 
                             Style="{StaticResource MaterialDesignOutlinedButton}"  
                             Margin="0,5"
                             Click="AddBill_Button"
@@ -104,13 +106,37 @@
                                     <TextBlock Grid.Column="1" Text="{Binding UnitPrice, StringFormat={}{0:N0}}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray"/>
                                     <TextBlock Grid.Column="2" Text="{Binding Quantity}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
                                     <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat={}{0:N0} ₽}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold"/>
-                                    <Button Grid.Column="5" Style="{StaticResource MaterialDesignIconButton}" Click="DeleteOrderItem_Click" Foreground="Red" Width="30" Height="30" HorizontalAlignment="Right">
+
+                                    <CheckBox x:Name="ItemCheckBox" 
+                                              Grid.Column="4" 
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              VerticalAlignment="Center" 
+                                              HorizontalAlignment="Center"/>
+
+                                    <Button x:Name="ItemDeleteBtn" 
+                                            Grid.Column="5" 
+                                            Style="{StaticResource MaterialDesignIconButton}" 
+                                            Click="DeleteOrderItem_Click" 
+                                            Foreground="Red" 
+                                            Width="30" Height="30" 
+                                            HorizontalAlignment="Right">
                                         <materialDesign:PackIcon Kind="Delete"/>
                                     </Button>
-                                    <CheckBox Grid.Column="4" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                                 </Grid>
                             </Border>
+
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.CurrentOrder.Status, RelativeSource={RelativeSource AncestorType=Page}}" Value="Оплачен">
+                                    <Setter TargetName="ItemCheckBox" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="ItemDeleteBtn" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DataContext.CurrentOrder.Status, RelativeSource={RelativeSource AncestorType=Page}}" Value="Закрыт">
+                                    <Setter TargetName="ItemCheckBox" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="ItemDeleteBtn" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

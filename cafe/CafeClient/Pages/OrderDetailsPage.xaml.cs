@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using System.Linq; 
 
 namespace CafeClient.Pages
 {
@@ -72,11 +73,13 @@ namespace CafeClient.Pages
             {
                 if (BtnPay != null) BtnPay.Visibility = Visibility.Collapsed;
                 if (BtnDeleteOrder != null) BtnDeleteOrder.Visibility = Visibility.Collapsed;
+                if (BtnSplitBill != null) BtnSplitBill.Visibility = Visibility.Collapsed;
             }
             else
             {
                 if (BtnPay != null) BtnPay.Visibility = Visibility.Visible;
                 if (BtnDeleteOrder != null) BtnDeleteOrder.Visibility = Visibility.Visible;
+                if (BtnSplitBill != null) BtnSplitBill.Visibility = Visibility.Visible; 
             }
         }
 
@@ -98,7 +101,7 @@ namespace CafeClient.Pages
                 if (success)
                 {
                     MessageBox.Show("Заказ успешно оплачен и закрыт.");
-                    await LoadFullOrderDetails(); 
+                    await LoadFullOrderDetails();
                 }
                 else
                 {
