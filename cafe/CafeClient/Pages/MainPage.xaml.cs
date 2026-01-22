@@ -14,7 +14,7 @@ namespace CafeClient.Pages
 {
     public partial class MainPage : Page
     {
-        private readonly ApiService _apiService;
+        private readonly ApiService _apiService; 
         private List<MenuItemResponseDto> _allMenuItems = new();
         private ICollectionView _menuView;
         private string _searchText = "";
