@@ -101,11 +101,13 @@ http://localhost:8080/swagger
 
 #### 3. Запуск клиента
 
+- Ставить порт как у контейнера :8080 чтобы клиент заработал
+
 Файл `CafeClient/appsettings.json`:
 ```json
 {
   "Api": {
-    "BaseUrl": "http://localhost:5158"
+    "BaseUrl": "http://localhost:8080"
   }
 }
 ```
