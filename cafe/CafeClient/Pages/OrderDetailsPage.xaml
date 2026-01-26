@@ -89,6 +89,7 @@
 
                 <ListView Grid.Row="1" ItemsSource="{Binding CurrentOrder.Items}" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
                           HorizontalContentAlignment="Stretch" Padding="0">
                     <ListView.ItemTemplate>
                         <DataTemplate>

@@ -99,7 +99,7 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <materialDesign:Card Margin="5" Padding="15" UniformCornerRadius="6" Background="#F5F5F5" Width="170">
+                                <materialDesign:Card Margin="5" Padding="15" UniformCornerRadius="6" Background="#F5F5F5" Width="180">
                                     <StackPanel>
                                         <TextBlock Margin="5" Text="{Binding TableNumber, StringFormat=Столик №{0}}" FontWeight="Bold" FontSize="23" Foreground="Gray"/>
                                         <TextBlock Margin="5" Text="{Binding UserName}" FontSize="16" Foreground="Gray"/>
