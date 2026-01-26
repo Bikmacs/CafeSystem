@@ -219,7 +219,6 @@ namespace CafeClient.Pages
 
         private void OrdersListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {   
-            ButtonUser.Visibility = Visibility.Collapsed;
             if (OrdersListView.SelectedItem is not OrderResponseDto selectedOrder) return;
             NavigationService?.Navigate(new OrderDetailsPage(selectedOrder.OrderId, selectedOrder, _apiService));
         }

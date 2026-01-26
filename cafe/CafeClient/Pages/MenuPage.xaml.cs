@@ -96,6 +96,12 @@ namespace CafeClient.Pages
                 return;
             }
 
+            if (!Regex.IsMatch(NewMenuItem.Name, @"^[a-zA-Zа-яА-ЯёЁ\s\-]+$"))
+            {
+                MessageBox.Show("Название блюда должно содержать только буквы!", "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             bool success = await _apiService.AddMenuAsync(NewMenuItem);
 
             if (success)

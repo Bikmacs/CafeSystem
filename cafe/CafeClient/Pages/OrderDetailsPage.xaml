@@ -162,7 +162,7 @@
                     <TabControl.ContentTemplate>
                         <DataTemplate>
                             <Grid Background="#EEEEEE">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="500" Margin="10">
+                                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" MaxHeight="500" Margin="10">
                                     <materialDesign:Card Padding="0" UniformCornerRadius="4">
                                         <Grid>
                                             <Grid.RowDefinitions>

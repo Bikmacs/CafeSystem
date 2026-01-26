@@ -4,6 +4,7 @@ using CafeClient.Services;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -85,6 +86,18 @@ namespace CafeClient.Pages
                 EditableUser.RoleId <= 0)
             {
                 MessageBox.Show("Пожалуйста, заполните ФИО и Логин!");
+                return;
+            }
+
+            if (!Regex.IsMatch(EditableUser.FullName, @"^[a-zA-Zа-яА-ЯёЁ\s\-]+$"))
+            {
+                MessageBox.Show("ФИО должно содержать только буквы!", "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!Regex.IsMatch(EditableUser.Login, @"^[a-zA-Z0-9]+$"))
+            {
+                MessageBox.Show("Логин может содержать только латинские буквы и цифры.");
                 return;
             }
 
