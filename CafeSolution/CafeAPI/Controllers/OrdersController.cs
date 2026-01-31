@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "1,2,3")]
+    [Authorize(Roles = "Admin,Waiter")]
     [ApiController]
     public class OrdersController : ControllerBase
     {

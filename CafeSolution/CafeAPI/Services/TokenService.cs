@@ -20,11 +20,12 @@ namespace CafeAPI.Services
 
         public string CreateToken(User user)
         {
+            var role = ((RoleAccess)user.RoleId).ToString();
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Login), 
-                new Claim(ClaimTypes.Role, user.RoleId.ToString())
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);

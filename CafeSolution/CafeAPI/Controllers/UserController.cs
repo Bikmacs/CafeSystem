@@ -24,7 +24,7 @@ namespace CafeAPI.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsersAsync()
         {
@@ -44,7 +44,7 @@ namespace CafeAPI.Controllers
         }
 
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
@@ -56,7 +56,7 @@ namespace CafeAPI.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}/GetUserId")]
         public async Task<ActionResult<UserResponseDto?>> GetUserByIdAsync(int id)
         {
@@ -68,7 +68,7 @@ namespace CafeAPI.Controllers
             return Ok(user);
         }
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/UpdateUser")]
         public async Task<ActionResult<UserResponseDto?>> UpdateUserAsync(int id, [FromBody] CreateUserDto updateUserDto)
         {
