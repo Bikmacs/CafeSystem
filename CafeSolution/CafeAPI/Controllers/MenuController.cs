@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class MenuController : ControllerBase
     {
@@ -25,11 +25,12 @@ namespace CafeAPI.Controllers
         public async Task<IActionResult> GetMenu()
         {
             var result = await _menuService.GetMenuAsync();
+            if (result == null) return NotFound("Список пуст");
             return Ok(result);
         }
 
         [HttpPost("Add")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddItem([FromBody] CreateMenuItemDto dto)
         {
             try
@@ -44,18 +45,18 @@ namespace CafeAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteItem(int id)
         {
             var success = await _menuService.DeleteItemMenu(id);
-            return success ? NoContent() : NotFound();
+            return success ? Ok("удалено") : NotFound("Не найдено");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMenuItemById(int id)
         {
             var item = await _menuService.GetMenuItemById(id);
-            return item == null ? NotFound() : Ok(item);
+            return item == null ? NotFound("Не найдено") : Ok(item);
         }
     }
 
