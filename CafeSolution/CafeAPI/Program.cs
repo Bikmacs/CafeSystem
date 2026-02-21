@@ -15,14 +15,19 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<CafeDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<CafeDbContext>(options =>
+        options.UseInMemoryDatabase("InMemoryCafeTestDb"));
+}
+else
+{
+    builder.Services.AddDbContext<CafeDbContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-// кеширование
 builder.Services.AddMemoryCache();
 
 
