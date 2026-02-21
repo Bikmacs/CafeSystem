@@ -32,7 +32,7 @@ namespace IntegrationTests.Controllers
             Dbcontext.MenuItems.Add(testMenuItem);
             await Dbcontext.SaveChangesAsync();
 
-            var response = await HttpClient.GetAsync("/api/Menu");
+            var response = await HttpClient.GetAsync("/api/Menu/GetMenu");
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var menuItems = await response.Content.ReadFromJsonAsync<MenuItemResponseDto[]>();
