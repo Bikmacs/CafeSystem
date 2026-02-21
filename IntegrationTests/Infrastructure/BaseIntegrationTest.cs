@@ -1,40 +1,62 @@
 ﻿using CafeAPI.Data;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using CafeAPI.Interfaces.IServices;
+using CafeAPI.Models;
 
 namespace IntegrationTests.Infrastructure
 {
     public abstract class BaseIntegrationTest
     {
-        protected CafeApiFactory Factory;
+        private CafeApiFactory _factory;
         protected HttpClient HttpClient;
         protected CafeDbContext Dbcontext;
 
         [SetUp]
         public void BaseSetup()
-        {   
+        {
             //Создание сервера
-            Factory = new CafeApiFactory();
-            HttpClient = Factory.CreateClient();
+            _factory = new CafeApiFactory();
+            HttpClient = _factory.CreateClient();
             //Создание бд
-            var scope = Factory.Services.CreateScope();
+            var scope = _factory.Services.CreateScope();
             Dbcontext = scope.ServiceProvider.GetRequiredService<CafeDbContext>();
 
             //Отчистка 
             Dbcontext.Database.EnsureDeleted();
             Dbcontext.Database.EnsureCreated();
-
         }
+
+        protected string GetJwtTokenForRole(int roleId)
+        {
+            var scope = _factory.Services.CreateScope();
+            var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
+
+            var testUser = new User
+            {
+                UserId = 1,
+                Login = "Администратор",
+                RoleId = roleId
+            };
+            return tokenService.CreateToken(testUser);
+        }
+
+        private void AuthenticateClientAsRole(int roleId)
+        {
+            var token = GetJwtTokenForRole(roleId);
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+        
+        protected void AuthenticateAdminAsRole() => AuthenticateClientAsRole(1);
+        protected void AuthenticateWaiterAsRole() => AuthenticateClientAsRole(2);
+        protected void AuthenticateCookAsRole() => AuthenticateClientAsRole(3);
+        
 
         [TearDown]
         public void BaseTearDown()
         {
             HttpClient.Dispose();
-            Factory.Dispose();
+            _factory.Dispose();
             Dbcontext.Dispose();
         }
     }

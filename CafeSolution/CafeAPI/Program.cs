@@ -99,23 +99,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-
-
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+//Configure the HTTP request pipeline.
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<CafeAPI.Data.CafeDbContext>();
-    if (dbContext.Database.IsRelational())
+    using (var scope = app.Services.CreateScope())
     {
+        var dbContext = scope.ServiceProvider.GetRequiredService<CafeDbContext>();
         dbContext.Database.Migrate();
     }
 }
 
-
-
-//Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -130,6 +125,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 
 
 public partial class Program { }

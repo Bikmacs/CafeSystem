@@ -7,6 +7,7 @@ using CafeAPI.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -25,8 +26,7 @@ namespace CafeAPI.Controllers
         public async Task<IActionResult> GetMenu()
         {
             var result = await _menuService.GetMenuAsync();
-            if (result == null) return NotFound("Список пуст");
-            return Ok(result);
+            return result.Any() ? Ok(result) : NotFound("Список пуст");
         }
 
         [HttpPost("Add")]
@@ -59,6 +59,4 @@ namespace CafeAPI.Controllers
             return item == null ? NotFound("Не найдено") : Ok(item);
         }
     }
-
 }
-

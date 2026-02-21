@@ -104,6 +104,7 @@ namespace CafeAPI.Controllers
             {
                 return NotFound($"Заказ с ID {id} не найден.");
             }
+
             return NoContent();
         }
 
@@ -142,6 +143,7 @@ namespace CafeAPI.Controllers
                 {
                     return NotFound($"Заказ с ID {id} или позиция заказа с ID {orderItemId} не найдены.");
                 }
+
                 return Ok("Позиция заказа успешно удалена.");
             }
             catch (Exception ex)
@@ -163,6 +165,5 @@ namespace CafeAPI.Controllers
                 return StatusCode(500, $"Ошибка получения заказов кухни: {ex.Message}");
             }
         }
-
     }
 }
