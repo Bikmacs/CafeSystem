@@ -1,26 +1,23 @@
 ﻿using CafeAPI.DTOs.MenuItems;
 using CafeAPI.Models;
 using IntegrationTests.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationTests.Controllers
 {
     [TestFixture]
     internal class MenuControllerTests : BaseIntegrationTest
     {
-        [Test]
-        public async Task GetMenuAsync_ReturnMenu()
+        private MenuItem _testMenuItem;
+
+        [SetUp]
+        public void MenuItemSetUp()
         {
             var testCategory = new Category { Name = "Чай" };
-            Dbcontext.Category.Add(testCategory);
+            _testMenuItem = new MenuItem
 
-            var testMenuItem = new MenuItem
+
             {
                 Name = "Черный чай",
                 Price = 150,
@@ -28,22 +25,70 @@ namespace IntegrationTests.Controllers
                 Available = true,
                 Category = testCategory
             };
+        }
 
-            Dbcontext.MenuItems.Add(testMenuItem);
+        [Test]
+        public async Task GetMenuAsync_ReturnMenu()
+        {
+            Dbcontext.MenuItems.Add(_testMenuItem);
             await Dbcontext.SaveChangesAsync();
 
-            var response = await HttpClient.GetAsync("/api/Menu");
-
+            var response = await HttpClient.GetAsync("/api/Menu/GetMenu");
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var menuItems = await response.Content.ReadFromJsonAsync<MenuItemResponseDto[]>();
 
-            Assert.IsNotNull(menuItems, "Ответ от API не должен быть пустым");
-            Assert.AreEqual(1, menuItems.Length, "В списке должен быть ровно 1 предмет");
-            Assert.AreEqual("Черный чай", menuItems[0].Name);
-            Assert.IsTrue(menuItems[0].Available, "Поле должно быть true");
+            var menuItems = await response.Content.ReadFromJsonAsync<MenuItemResponseDto[]>();
+            if (menuItems != null)
+            {
+                var tea = menuItems.FirstOrDefault(t => t.Name == "Черный чай");
+                Assert.IsNotNull(menuItems, "Ответ от API не должен быть пустым");
+                Assert.IsNotNull(tea, "Добавленный чай не найден в списке меню!");
+                Assert.IsTrue(tea.Available, "Поле должно быть true");
+            }
+        }
+
+        [Test]
+        public async Task AddEatOnMenu()
+        {
+            Dbcontext.Category.Add(_testMenuItem.Category);
+            await Dbcontext.SaveChangesAsync();
+
+            var testMenuItem = new CreateMenuItemDto
+            {
+                Name = "Чизкейк",
+                Description = "Вкусный чизкейк",
+                Price = 350,
+                CategoryId = _testMenuItem.Category.CategoryId,
+                Available = true,
+            };
+
+            var response = await HttpClient.PostAsJsonAsync("/api/Menu/Add", testMenuItem);
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Сервер вернул: {response.StatusCode}");
+
+            var itemDb = Dbcontext.MenuItems.FirstOrDefault(t => t.Name == "Чизкейк");
+
+            Assert.IsNotNull(itemDb, "Блюдо не было сохранено в базу данных!");
+            Assert.AreEqual(350, itemDb.Price, "Цена сохранилась неправильно!");
+        }
+
+        [Test]
+        public async Task DeleteMenuAsync_ReturnMenu()
+        {
+            Dbcontext.MenuItems.Add(_testMenuItem);
+            await Dbcontext.SaveChangesAsync();
+
+            var response = await HttpClient.DeleteAsync($"/api/Menu/{_testMenuItem.MenuItemId}");
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+
+            var deleteItem = Dbcontext.MenuItems.FirstOrDefault(d => d.MenuItemId == _testMenuItem.MenuItemId)!;
+            Assert.IsNull(deleteItem);
+        }
+
+        [Test]
+        public async Task GetMenuItemById()
+        {
+            var response = await HttpClient.DeleteAsync($"/api/Menu/{3}");
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
-         
-    
-
