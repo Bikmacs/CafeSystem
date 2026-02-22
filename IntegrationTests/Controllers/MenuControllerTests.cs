@@ -16,8 +16,6 @@ namespace IntegrationTests.Controllers
         {
             var testCategory = new Category { Name = "Чай" };
             _testMenuItem = new MenuItem
-
-
             {
                 Name = "Черный чай",
                 Price = 150,
