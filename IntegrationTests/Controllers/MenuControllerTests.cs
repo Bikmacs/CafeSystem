@@ -15,6 +15,7 @@ namespace IntegrationTests.Controllers
         public void MenuItemSetUp()
         {
             
+            
             var testCategory = new Category { Name = "Чай" };
             _testMenuItem = new MenuItem
             {
