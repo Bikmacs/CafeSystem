@@ -1,5 +1,3 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
 # Образ для запуска сервера
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
