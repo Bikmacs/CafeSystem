@@ -10,6 +10,7 @@ namespace IntegrationTests.Controllers
     internal class MenuControllerTests : BaseIntegrationTest
     {
         private MenuItem _testMenuItem;
+        private int _rnd = new Random().Next(1, 31);
 
         [SetUp]
         public void MenuItemSetUp()
@@ -76,19 +77,26 @@ namespace IntegrationTests.Controllers
             Dbcontext.MenuItems.Add(_testMenuItem);
             await Dbcontext.SaveChangesAsync();
 
-            var response = await HttpClient.DeleteAsync($"/api/Menu/{_testMenuItem.MenuItemId}");
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var id = _testMenuItem.MenuItemId;
 
+            var response = await HttpClient.DeleteAsync($"/api/Menu/{id}");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var deleteItem = Dbcontext.MenuItems.FirstOrDefault(d => d.MenuItemId == _testMenuItem.MenuItemId)!;
-            Assert.IsNull(deleteItem);
+            Dbcontext.ChangeTracker.Clear();
+
+            var deleteItem = Dbcontext.MenuItems
+                .FirstOrDefault(d => d.MenuItemId == id);
+            Assert.That(deleteItem, Is.Null);
         }
 
         [Test]
         public async Task GetMenuItemById()
         {
-            var response = await HttpClient.DeleteAsync($"/api/Menu/{3}");
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Dbcontext.ChangeTracker.Clear();
+            
+            var response = await HttpClient.DeleteAsync($"/api/Menu/{_rnd}");
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"_rnd: {_rnd}");
         }
+        
     }
 }

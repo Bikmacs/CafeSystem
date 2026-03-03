@@ -21,13 +21,12 @@ namespace IntegrationTests.Infrastructure
             //Создание бд
             var scope = _factory.Services.CreateScope();
             Dbcontext = scope.ServiceProvider.GetRequiredService<CafeDbContext>();
-
             //Отчистка 
             Dbcontext.Database.EnsureDeleted();
             Dbcontext.Database.EnsureCreated();
         }
 
-        protected string GetJwtTokenForRole(int roleId)
+        private string GetJwtTokenForRole(int roleId)
         {
             var scope = _factory.Services.CreateScope();
             var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();

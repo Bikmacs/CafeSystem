@@ -10,7 +10,7 @@ namespace CafeAPI.Services
     public class MenuService : IMenuService
     {
         private readonly IMenuItemRepository _menuItemRepository;
-        //private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderItemRepository _orderItemRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMemoryCache _cache;
         private const string MenuCacheKey = "menu_cache";
@@ -19,11 +19,11 @@ namespace CafeAPI.Services
         public MenuService(
             IMenuItemRepository menuItemRepository, 
             IMemoryCache cache,
-            //IOrderItemRepository orderItemRepository,
+            IOrderItemRepository orderItemRepository,
             ICategoryRepository categoryRepository)
         {
             _menuItemRepository = menuItemRepository;
-            //_orderItemRepository = orderItemRepository;
+            _orderItemRepository = orderItemRepository;
             _categoryRepository = categoryRepository;
             _cache = cache;
         }
@@ -136,7 +136,7 @@ namespace CafeAPI.Services
                 Name = item.Name,
                 Description = item.Description,
                 Price = item.Price,
-                Category = item.Category.Name,
+                Category = item.Category?.Name ?? "Категория не загружена",    
                 Available = item.Available
             };
         }
