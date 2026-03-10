@@ -1,5 +1,6 @@
 ﻿using CafeAPI.DTOs.Orders;
 using CafeAPI.Interfaces.IServices;
+using CafeAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,22 +9,11 @@ namespace CafeAPI.Controllers
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin,Waiter")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController(IOrderService orderService) : ControllerBase
     {
-        private readonly IOrderService _orderService;
-
-        public OrdersController(IOrderService orderService)
-        {
-            _orderService = orderService;
-        }
-
-
         [HttpPost("CreateOrder")]
         public async Task<ActionResult<OrderResponseDto>> CreateOrder([FromBody] CreateOrderDto dto)
         {
-            if (dto == null)
-                return BadRequest("Тело запроса пустое");
-
             if (dto.UserId <= 0)
                 return BadRequest("Некорректный UserId");
 
@@ -32,7 +22,7 @@ namespace CafeAPI.Controllers
 
             try
             {
-                var createdOrder = await _orderService.CreateOrderAsync(dto);
+                var createdOrder = await orderService.CreateOrderAsync(dto);
 
                 return CreatedAtAction(
                     nameof(GetOrderById),
@@ -58,14 +48,14 @@ namespace CafeAPI.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetAllOrders()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await orderService.GetAllOrdersAsync();
             return Ok(orders);
         }
 
         [HttpGet("{id}/GetOrderById")]
         public async Task<ActionResult<OrderResponseDto>> GetOrderById(int id)
         {
-            var order = await _orderService.GetOrderWithItemsAsync(id);
+            var order = await orderService.GetOrderWithItemsAsync(id);
 
             if (order == null)
             {
@@ -80,7 +70,7 @@ namespace CafeAPI.Controllers
         {
             try
             {
-                var result = await _orderService.AddOrderItemsAsync(id, itemsDto);
+                var result = await orderService.AddOrderItemsAsync(id, itemsDto);
 
                 if (!result)
                 {
@@ -98,7 +88,7 @@ namespace CafeAPI.Controllers
         [HttpDelete("{id}/DeleteOrder")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            var result = await _orderService.DeleteOrderAsync(id);
+            var result = await orderService.DeleteOrderAsync(id);
 
             if (!result)
             {
@@ -112,7 +102,7 @@ namespace CafeAPI.Controllers
         [HttpGet("{userId}/userOrder")]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetOrdersByUser(int userId)
         {
-            var orders = await _orderService.GetOrdersByUserAsync(userId);
+            var orders = await orderService.GetOrdersByUserAsync(userId);
             return Ok(orders);
         }
 
@@ -120,7 +110,7 @@ namespace CafeAPI.Controllers
         [HttpGet("{status}/status")]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetOrdersByStatus(string status)
         {
-            var orders = await _orderService.GetOrdersByStatusAsync(status);
+            var orders = await orderService.GetOrdersByStatusAsync(status);
             return Ok(orders);
         }
 
@@ -128,7 +118,7 @@ namespace CafeAPI.Controllers
         [HttpPatch("{id}/statusUpdate")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] string newStatus)
         {
-            var result = await _orderService.UpdateOrderStatusAsync(id, newStatus);
+            var result = await orderService.UpdateOrderStatusAsync(id, newStatus);
             if (!result) return NotFound();
             return Ok($"Статус заказа {id} обновлен на '{newStatus}'");
         }
@@ -138,7 +128,7 @@ namespace CafeAPI.Controllers
         {
             try
             {
-                var result = await _orderService.DeleteOrderItemsAsync(id, orderItemId);
+                var result = await orderService.DeleteOrderItemsAsync(id, orderItemId);
                 if (!result)
                 {
                     return NotFound($"Заказ с ID {id} или позиция заказа с ID {orderItemId} не найдены.");
@@ -157,7 +147,7 @@ namespace CafeAPI.Controllers
         {
             try
             {
-                var orders = await _orderService.GetKitchenOrdersAsync();
+                var orders = await orderService.GetKitchenOrdersAsync();
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -165,5 +155,25 @@ namespace CafeAPI.Controllers
                 return StatusCode(500, $"Ошибка получения заказов кухни: {ex.Message}");
             }
         }
+
+        [HttpGet("ExportRevenue")]
+        public async Task<IActionResult> ExportRevenueExcel([FromQuery] bool isMonthly)
+        {
+            try
+            {
+                var fileBytes = await orderService.ViruchkaShowExcel(isMonthly);
+        
+                string fileName = isMonthly 
+                    ? $"Отчет_Выручка_Месяц{DateTime.Now:MM-yyyy}.xlsx" 
+                    : $"Отчет_Выручка_День{DateTime.Now:dd-MM-yyyy}.xlsx";
+
+                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

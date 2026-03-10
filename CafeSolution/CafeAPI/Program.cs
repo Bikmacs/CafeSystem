@@ -107,7 +107,7 @@ if (!app.Environment.IsEnvironment("Testing"))
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<CafeDbContext>();
-        dbContext.Database.Migrate();
+        //dbContext.Database.Migrate();
     }
 }
 

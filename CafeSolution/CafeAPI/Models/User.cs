@@ -6,16 +6,11 @@ namespace CafeAPI.Models
     {
         public int UserId { get; set; }
 
-        [Required]
-        [MaxLength(100)] 
-        public string FullName { get; set; } = string.Empty;
+        [Required] [MaxLength(100)] public string FullName { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
-        public string Login { get; set; } = string.Empty;
+        [Required] [MaxLength(50)] public string Login { get; set; } = string.Empty;
 
-        [Required]
-        public string PasswordHash { get; set; } = string.Empty;
+        [Required] public string PasswordHash { get; set; } = string.Empty;
 
 
         public int RoleId { get; set; }

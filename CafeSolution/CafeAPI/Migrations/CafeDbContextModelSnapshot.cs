@@ -92,6 +92,52 @@ namespace CafeAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CafeAPI.Models.DishItems", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("DishItems");
+                });
+
+            modelBuilder.Entity("CafeAPI.Models.Indigriend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Indigriend");
+                });
+
             modelBuilder.Entity("CafeAPI.Models.MenuItem", b =>
                 {
                     b.Property<int>("MenuItemId")
@@ -585,6 +631,25 @@ namespace CafeAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CafeAPI.Models.DishItems", b =>
+                {
+                    b.HasOne("CafeAPI.Models.Indigriend", "Ingredient")
+                        .WithMany("DishItems")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CafeAPI.Models.MenuItem", "MenuItem")
+                        .WithMany("DishItems")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("MenuItem");
+                });
+
             modelBuilder.Entity("CafeAPI.Models.MenuItem", b =>
                 {
                     b.HasOne("CafeAPI.Models.Category", "Category")
@@ -653,8 +718,15 @@ namespace CafeAPI.Migrations
                     b.Navigation("MenuItems");
                 });
 
+            modelBuilder.Entity("CafeAPI.Models.Indigriend", b =>
+                {
+                    b.Navigation("DishItems");
+                });
+
             modelBuilder.Entity("CafeAPI.Models.MenuItem", b =>
                 {
+                    b.Navigation("DishItems");
+
                     b.Navigation("OrderItems");
                 });
 

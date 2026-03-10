@@ -20,6 +20,6 @@ namespace CafeAPI.Interfaces.IServices
         Task<bool> AddOrderItemsAsync(int orderId, CreateOrderDto itemsDto);
         Task<bool> DeleteOrderItemsAsync(int id, int orderItemId);
         Task<List<OrderResponseDto>> GetKitchenOrdersAsync();
-
+        Task<byte[]> ViruchkaShowExcel(bool isMonthly);
     }
 }
