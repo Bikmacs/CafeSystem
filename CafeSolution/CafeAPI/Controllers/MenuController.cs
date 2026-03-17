@@ -1,41 +1,30 @@
-﻿using CafeAPI.DTOs.Category;
-using CafeAPI.DTOs.MenuItems;
-using CafeAPI.Interfaces.IRepository;
+﻿using CafeAPI.DTOs.MenuItems;
+using CafeAPI.DTOs.Products;
 using CafeAPI.Interfaces.IServices;
-using CafeAPI.Models;
-using CafeAPI.Repositories;
+using CafeAPI.Models.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize(Roles = "Admin,Waiter")]
     [ApiController]
-    public class MenuController : ControllerBase
+    public class MenuController(IMenuService menuService) : ControllerBase
     {
-        private readonly IMenuService _menuService;
-
-        public MenuController(IMenuService menuService)
-        {
-            _menuService = menuService;
-        }
-
         [HttpGet("GetMenu")]
         public async Task<IActionResult> GetMenu()
         {
-            var result = await _menuService.GetMenuAsync();
+            var result = await menuService.GetMenuAsync();
             return result.Any() ? Ok(result) : NotFound("Список пуст");
         }
 
         [HttpPost("Add")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddItem([FromBody] CreateMenuItemDto dto)
         {
             try
             {
-                var result = await _menuService.AddItemMenuAsync(dto);
+                var result = await menuService.AddItemMenuAsync(dto);
                 return CreatedAtAction(nameof(GetMenuItemById), new { id = result.MenuItemId }, result);
             }
             catch (Exception ex)
@@ -45,18 +34,36 @@ namespace CafeAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteItem(int id)
         {
-            var success = await _menuService.DeleteItemMenu(id);
+            var success = await menuService.DeleteItemMenu(id);
             return success ? Ok("удалено") : NotFound("Не найдено");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMenuItemById(int id)
         {
-            var item = await _menuService.GetMenuItemById(id);
-            return item == null ? NotFound("Не найдено") : Ok(item);
+            var item = await menuService.GetMenuItemById(id);
+            return Ok(item);
+        }
+
+        [HttpPost("CreateProduct")]
+        public async Task<IActionResult> AddProducts([FromQuery] CreateProductDto productDto)
+        {
+            try
+            {
+                var unit = ProductUnitHelper.GetProductUnits[productDto.Product];
+                
+                
+                return Ok(new { 
+                    Message = $"Запасы пополнены: {productDto.Product} — {productDto.Quantity} {unit}." 
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

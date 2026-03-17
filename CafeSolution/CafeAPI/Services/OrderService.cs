@@ -4,37 +4,26 @@ using CafeAPI.DTOs.Orders;
 using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Interfaces.IServices;
 using CafeAPI.Models;
-using CafeAPI.Repositories;
 using ClosedXML.Excel;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CafeAPI.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService(
+        IOrderRepository orderRepository,
+        IMenuItemRepository menuItemRepository,
+        IOrderItemRepository itemRepository)
+        : IOrderService
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderItemRepository _itemRepository;
-        private readonly IMenuItemRepository _menuItemRepository;
-
-        public OrderService(IOrderRepository orderRepository, IMenuItemRepository menuItemRepository,
-            IOrderItemRepository itemRepository)
-        {
-            _orderRepository = orderRepository;
-            _menuItemRepository = menuItemRepository;
-            _itemRepository = itemRepository;
-        }
-
         public async Task<bool> AddOrderItemsAsync(int orderId, CreateOrderDto itemsDto)
         {
-            var order = await _orderRepository.GetOrderByIdAsync(orderId);
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
             if (order == null) return false;
             if (order.Status == "Оплачен" || order.Status == "Закрыт")
                 throw new Exception("Нельзя добавить блюда в закрытый заказ.");
 
             foreach (var item in itemsDto.Items)
             {
-                var menuItem = await _menuItemRepository.GetMenuItemByIdAsync(item.MenuItemId);
+                var menuItem = await menuItemRepository.GetMenuItemByIdAsync(item.MenuItemId);
 
                 if (menuItem == null || menuItem.Available == false)
                 {
@@ -49,7 +38,7 @@ namespace CafeAPI.Services
                     UnitPrice = menuItem.Price
                 };
 
-                await _orderRepository.AddOrderItemAsync(newOrderItem);
+                await orderRepository.AddOrderItemAsync(newOrderItem);
             }
 
             return true;
@@ -66,7 +55,7 @@ namespace CafeAPI.Services
             };
             foreach (var item in orderDto.Items)
             {
-                var menuItem = await _menuItemRepository.GetMenuItemByIdAsync(item.MenuItemId);
+                var menuItem = await menuItemRepository.GetMenuItemByIdAsync(item.MenuItemId);
                 if (menuItem == null || menuItem.Available == false)
                 {
                     throw new Exception($"Блюдо {item.MenuItemId} не найдено. или же в стоп листе");
@@ -82,7 +71,7 @@ namespace CafeAPI.Services
                 order.OrderItems.Add(newOrderItem);
             }
 
-            await _orderRepository.CreateOrderAsync(order);
+            await orderRepository.CreateOrderAsync(order);
             var orderResponse = new OrderResponseDto
             {
                 OrderId = order.OrderId,
@@ -99,7 +88,7 @@ namespace CafeAPI.Services
                     MenuItemId = oi.MenuItemId,
                     Quantity = oi.Quantity,
                     UnitPrice = oi.UnitPrice,
-                    MenuItemName = oi.MenuItem?.Name ?? "Неизвестно"
+                    MenuItemName = oi.MenuItem.Name
                 }).ToList()
             };
             return orderResponse;
@@ -107,26 +96,26 @@ namespace CafeAPI.Services
 
         public async Task<bool> DeleteOrderAsync(int id)
         {
-            var order = await _orderRepository.GetOrderByIdAsync(id);
+            var order = await orderRepository.GetOrderByIdAsync(id);
             if (order == null) return false;
 
-            await _orderRepository.DeleteOrderAsync(order);
+            await orderRepository.DeleteOrderAsync(order);
             return true;
         }
 
         public async Task<bool> DeleteOrderItemsAsync(int id, int orderItemId)
         {
-            var order = await _orderRepository.GetOrderByIdAsync(id);
+            var order = await orderRepository.GetOrderByIdAsync(id);
             if (order == null) return false;
             if (order.Status == "Оплачен" || order.Status == "Закрыт") return false;
 
-            await _itemRepository.RemoveOrderItemAsync(id, orderItemId);
+            await itemRepository.RemoveOrderItemAsync(id, orderItemId);
             return true;
         }
 
         public async Task<List<OrderResponseDto>> GetAllOrdersAsync()
         {
-            var orders = await _orderRepository.GetAllAsync();
+            var orders = await orderRepository.GetAllAsync();
             var orderDtos = orders.Select(order => new OrderResponseDto
             {
                 OrderId = order.OrderId,
@@ -142,8 +131,7 @@ namespace CafeAPI.Services
 
         public async Task<OrderResponseDto?> GetOrderByIdAsync(int id)
         {
-            var order = await _orderRepository.GetOrderByIdAsync(id);
-
+            var order = await orderRepository.GetOrderByIdAsync(id);
             if (order == null) return null;
 
             var orderResponse = new OrderResponseDto
@@ -170,9 +158,7 @@ namespace CafeAPI.Services
 
         public async Task<List<OrderResponseDto>> GetOrdersByDateAsync(DateTime date)
         {
-            var order = await _orderRepository.GetOrdersByDateAsync(date);
-            if (order == null) return new List<OrderResponseDto>();
-
+            var order = await orderRepository.GetOrdersByDateAsync(date);
             var response = order.Select(o => new OrderResponseDto
             {
                 OrderId = o.OrderId,
@@ -187,7 +173,7 @@ namespace CafeAPI.Services
 
         public async Task<List<OrderResponseDto>> GetOrdersByStatusAsync(string status)
         {
-            var order = await _orderRepository.GetOrderByStatusAsync(status);
+            var order = await orderRepository.GetOrderByStatusAsync(status);
 
             var response = order.Select(o => new OrderResponseDto
             {
@@ -203,7 +189,7 @@ namespace CafeAPI.Services
 
         public async Task<List<OrderResponseDto>> GetOrdersByUserAsync(int userId)
         {
-            var order = await _orderRepository.GetOrderByUserAsync(userId);
+            var order = await orderRepository.GetOrderByUserAsync(userId);
             var response = order.Select(o => new OrderResponseDto
             {
                 OrderId = o.OrderId,
@@ -218,7 +204,7 @@ namespace CafeAPI.Services
 
         public async Task<OrderResponseDto?> GetOrderWithItemsAsync(int id)
         {
-            var order = await _orderRepository.GetOrderWithItemsAsync(id);
+            var order = await orderRepository.GetOrderWithItemsAsync(id);
             if (order == null) return null;
 
             var orderItemsDto = order.OrderItems.Select(oi => new OrderItemDto
@@ -227,7 +213,7 @@ namespace CafeAPI.Services
                 MenuItemId = oi.MenuItemId,
                 Quantity = oi.Quantity,
                 UnitPrice = oi.UnitPrice,
-                MenuItemName = oi.MenuItem?.Name ?? "Неизвестно"
+                MenuItemName = oi.MenuItem.Name
             }).ToList();
 
             var response = new OrderResponseDto
@@ -247,7 +233,7 @@ namespace CafeAPI.Services
 
         public async Task<List<OrderResponseDto>> GetKitchenOrdersAsync()
         {
-            var allOrders = await _orderRepository.GetAllAsync();
+            var allOrders = await orderRepository.GetAllAsync();
 
             var kitchenOrders = allOrders
                 .Where(o => o.Status == "Открыт" || o.Status == "Создан" || o.Status == "Готовится")
@@ -277,39 +263,38 @@ namespace CafeAPI.Services
 
             return result;
         }
-        
+
 
         public async Task<bool> UpdateOrderStatusAsync(int orderId, string status)
         {
-            var order = await _orderRepository.GetOrderByIdAsync(orderId);
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
             if (order == null) return false;
-            await _orderRepository.UpdateOrderStatus(orderId, status);
+            await orderRepository.UpdateOrderStatus(orderId, status);
             return true;
         }
 
         public async Task<byte[]> ViruchkaShowExcel(bool isMonthly)
         {
-            var dateStart = isMonthly 
+            var dateStart = isMonthly
                 ? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)
                 : DateTime.Today;
-            
-            var allOrders = await _orderRepository.GetAllAsync();
-            
+
+            var allOrders = await orderRepository.GetAllAsync();
+
             var reportOrders = allOrders
-                .Where(st => st.Status == "Оплачен" && st.CreatedAt >= dateStart)      
+                .Where(st => st.Status == "Оплачен" && st.CreatedAt >= dateStart)
                 .OrderBy(st => st.CreatedAt)
                 .ToList();
 
             var total = reportOrders
                 .Select(r => r.OrderItems.Sum(oi => oi.UnitPrice * oi.Quantity)).Sum();
-            
-            
+
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Отчет по выручке");
 
             worksheet.Cell("A1").Value = isMonthly ? "Отчет за месяц:" : "Отчет за день:";
             worksheet.Cell("B1").Value = dateStart.ToShortDateString();
-    
+
             worksheet.Cell("A2").Value = "Итоговая выручка:";
             worksheet.Cell("B2").Value = total;
             worksheet.Cell("B2").Style.NumberFormat.Format = "#,##0.00\" ₽\"";
@@ -322,20 +307,21 @@ namespace CafeAPI.Services
             worksheet.Cell("D4").Value = "Сумма";
             worksheet.Range("A4:D4").Style.Font.Bold = true;
             worksheet.Range("A4:D4").Style.Fill.BackgroundColor = XLColor.LightGray;
-    
-            int currentRow = 5;
+
+            var currentRow = 5;
             foreach (var order in reportOrders)
             {
                 worksheet.Cell(currentRow, 1).Value = order.OrderId;
                 worksheet.Cell(currentRow, 2).Value = order.CreatedAt.ToString("HH:mm");
                 worksheet.Cell(currentRow, 3).Value = order.TableNumber;
-        
+
                 var orderSum = order.OrderItems.Sum(oi => oi.UnitPrice * oi.Quantity);
                 worksheet.Cell(currentRow, 4).Value = orderSum;
                 worksheet.Cell(currentRow, 4).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
-        
+
                 currentRow++;
             }
+
             worksheet.Columns().AdjustToContents();
 
             using var stream = new MemoryStream();

@@ -3,12 +3,16 @@ using CafeAPI.DTOs.MenuItems;
 using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Interfaces.IServices;
 using CafeAPI.Models;
+using CafeAPI.Models.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using static CafeAPI.Models.Helpers.ProductUnitHelper;
 
 namespace CafeAPI.Services
 {
     public class MenuService : IMenuService
     {
+        private readonly DbContext _dbContext;
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly IOrderItemRepository _orderItemRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -20,12 +24,14 @@ namespace CafeAPI.Services
             IMenuItemRepository menuItemRepository, 
             IMemoryCache cache,
             IOrderItemRepository orderItemRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            DbContext dbContext)
         {
             _menuItemRepository = menuItemRepository;
             _orderItemRepository = orderItemRepository;
             _categoryRepository = categoryRepository;
             _cache = cache;
+            _dbContext = dbContext;
         }
 
         public async Task<IEnumerable<MenuItemResponseDto>> GetMenuAsync()
@@ -101,6 +107,8 @@ namespace CafeAPI.Services
 
             return true;
         }
+        
+        
 
         public Task<MenuItemResponseDto> GetMenuItemById(int id)
         {
@@ -140,5 +148,20 @@ namespace CafeAPI.Services
                 Available = item.Available
             };
         }
+        
+        public async Task<Dictionary<Products, UnitTypes>> AddNewProducts(Products productEnum, decimal quantityToAdd)
+        {
+            try
+            {
+                var newProducts = ProductUnitHelper.GetProductUnits;
+                string productName = productEnum.ToString();
+                
+                var indigrient = await _dbContext.Indigriends
+            }
+            catch (Exception exception)
+            {
+            }
+        }
+
     }
 }

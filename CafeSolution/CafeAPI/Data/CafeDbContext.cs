@@ -11,7 +11,6 @@ namespace CafeAPI.Data
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<MenuItem> MenuItems { get; set; } = null!;
-        public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<DishItems> DishItems { get; set; } = null!;
         public DbSet<Indigriend> Indigriend { get; set; } = null!;
 
@@ -69,7 +68,6 @@ namespace CafeAPI.Data
             );
 
             modelBuilder.Entity<MenuItem>().HasData(
-                // Супы
                 new MenuItem
                 {
                     MenuItemId = 1, Name = "Борщ",
@@ -88,8 +86,6 @@ namespace CafeAPI.Data
                     Description = "Нежный суп-пюре из лесных грибов с гренками", Price = 420, CategoryId = 1,
                     Available = true
                 },
-
-                // Салаты
                 new MenuItem
                 {
                     MenuItemId = 4, Name = "Цезарь с курицей",
@@ -107,8 +103,6 @@ namespace CafeAPI.Data
                     MenuItemId = 6, Name = "Витаминный салат", Description = "Микс свежих овощей с оливковым маслом",
                     Price = 400, CategoryId = 2, Available = true
                 },
-
-                // Закуски
                 new MenuItem
                 {
                     MenuItemId = 7, Name = "Брускетта с томатами",
@@ -126,8 +120,6 @@ namespace CafeAPI.Data
                     MenuItemId = 9, Name = "Моцарелла с томатами", Description = "Сыр моцарелла с томатами и базиликом",
                     Price = 400, CategoryId = 3, Available = true
                 },
-
-                // Основные блюда
                 new MenuItem
                 {
                     MenuItemId = 10, Name = "Стейк рибай", Description = "Сочный говяжий стейк, прожарка по желанию",
@@ -143,8 +135,6 @@ namespace CafeAPI.Data
                     MenuItemId = 12, Name = "Свинина в соусе барбекю",
                     Description = "Мясо свинины с соусом BBQ и овощами", Price = 1050, CategoryId = 4, Available = true
                 },
-
-                // Пицца
                 new MenuItem
                 {
                     MenuItemId = 13, Name = "Маргарита", Description = "Томатный соус, сыр моцарелла, базилик",
@@ -160,8 +150,6 @@ namespace CafeAPI.Data
                     MenuItemId = 15, Name = "Четыре сыра", Description = "Моцарелла, горгонзола, пармезан, чеддер",
                     Price = 850, CategoryId = 5, Available = true
                 },
-
-                // Паста
                 new MenuItem
                 {
                     MenuItemId = 16, Name = "Спагетти Болоньезе", Description = "Спагетти с мясным соусом и пармезаном",
@@ -178,8 +166,6 @@ namespace CafeAPI.Data
                     Description = "Паста с креветками, кальмарами и чесночным соусом", Price = 950, CategoryId = 6,
                     Available = true
                 },
-
-                // Десерты
                 new MenuItem
                 {
                     MenuItemId = 19, Name = "Тирамису",
@@ -198,8 +184,6 @@ namespace CafeAPI.Data
                     Description = "Классический чизкейк с клубничным соусом", Price = 450, CategoryId = 7,
                     Available = true
                 },
-
-                // Напитки
                 new MenuItem
                 {
                     MenuItemId = 22, Name = "Капучино", Description = "Эспрессо с горячим молоком и пенкой",
@@ -215,8 +199,6 @@ namespace CafeAPI.Data
                     MenuItemId = 24, Name = "Сок апельсиновый", Description = "Свежевжатый апельсиновый сок",
                     Price = 200, CategoryId = 8, Available = true
                 },
-
-                // Гарниры
                 new MenuItem
                 {
                     MenuItemId = 25, Name = "Картофель фри", Description = "Хрустящий картофель фри", Price = 250,
@@ -232,8 +214,6 @@ namespace CafeAPI.Data
                     MenuItemId = 27, Name = "Овощи на пару", Description = "Сезонные овощи на пару", Price = 230,
                     CategoryId = 9, Available = true
                 },
-
-                // Соусы
                 new MenuItem
                 {
                     MenuItemId = 28, Name = "Соус BBQ", Description = "Сладко-пряный соус для мяса", Price = 100,

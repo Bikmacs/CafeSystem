@@ -163,7 +163,7 @@ namespace CafeAPI.Controllers
             {
                 var fileBytes = await orderService.ViruchkaShowExcel(isMonthly);
         
-                string fileName = isMonthly 
+                var fileName = isMonthly 
                     ? $"Отчет_Выручка_Месяц{DateTime.Now:MM-yyyy}.xlsx" 
                     : $"Отчет_Выручка_День{DateTime.Now:dd-MM-yyyy}.xlsx";
 
