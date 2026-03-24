@@ -21,7 +21,7 @@ namespace CafeAPI.Services
         private const string CategoryCacheKey = "category_cache";
 
         public MenuService(
-            IMenuItemRepository menuItemRepository, 
+            IMenuItemRepository menuItemRepository,
             IMemoryCache cache,
             IOrderItemRepository orderItemRepository,
             ICategoryRepository categoryRepository,
@@ -107,8 +107,7 @@ namespace CafeAPI.Services
 
             return true;
         }
-        
-        
+
 
         public Task<MenuItemResponseDto> GetMenuItemById(int id)
         {
@@ -144,24 +143,54 @@ namespace CafeAPI.Services
                 Name = item.Name,
                 Description = item.Description,
                 Price = item.Price,
-                Category = item.Category?.Name ?? "Категория не загружена",    
+                Category = item.Category?.Name ?? "Категория не загружена",
                 Available = item.Available
             };
         }
-        
+
+
         public async Task<Dictionary<Products, UnitTypes>> AddNewProducts(Products productEnum, decimal quantityToAdd)
         {
             try
             {
-                var newProducts = ProductUnitHelper.GetProductUnits;
+                var productUnits = ProductUnitHelper.GetProductUnits;
                 string productName = productEnum.ToString();
-                
-                var indigrient = await _dbContext.Indigriends
+
+                var ingredient = await _dbContext.Ingredients
+                    .FirstOrDefaultAsync(i => i.Name == productName);
+
+                if (ingredient != null)
+                {
+                    ingredient.Quantity += quantityToAdd;
+                    _dbContext.Ingredients.Update(ingredient);
+                }
+                else
+                {
+                    var unit = productUnits.ContainsKey(productEnum)
+                        ? productUnits[productEnum]
+                        : UnitTypes.Kg; 
+                    
+                    var newIngredient = new Ingredient
+                    {
+                        Name = productName,
+                        Quantity = quantityToAdd,
+                        UnitType = unit.ToString()
+                    };
+
+                    await _dbContext.Ingredients.AddAsync(newIngredient);
+                }
+
+                await _dbContext.SaveChangesAsync();
+
+                return new Dictionary<Products, UnitTypes>
+                {
+                    { productEnum, productUnits[productEnum] }
+                };
             }
             catch (Exception exception)
             {
+                throw new Exception($"Ошибка при добавлении продукта '{productEnum}' на склад: {exception.Message}");
             }
         }
-
     }
 }
