@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using CafeAPI.DTOs.OrderItems;
 using CafeAPI.DTOs.Orders;
 using CafeAPI.Models;
@@ -8,6 +10,9 @@ using IntegrationTests.Infrastructure;
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
+[AllureNUnit]
+[AllureEpic("Управление кафе")]
+[AllureFeature("Заказы")]
 public class OrdersControllerTest : BaseIntegrationTest
 {
     private CreateOrderDto _createOrderDto;
@@ -48,7 +53,7 @@ public class OrdersControllerTest : BaseIntegrationTest
             Category = testCategory
         };
     }
-    
+
     [Test]
     public async Task CreateOrderTest()
     {
@@ -163,7 +168,7 @@ public class OrdersControllerTest : BaseIntegrationTest
             Assert.That(responseApi != null && responseApi.All(x => x.Status == TargetStatus), Is.True);
         });
     }
-    
+
     [Test]
     public async Task UpdateStatusOrder_ValidStatus()
     {
@@ -173,15 +178,16 @@ public class OrdersControllerTest : BaseIntegrationTest
 
         var newStatus = "Создан";
 
-        var response = await HttpClient.PatchAsJsonAsync($"/api/Orders/{_existingOrder.OrderId}/statusUpdate", newStatus);
+        var response =
+            await HttpClient.PatchAsJsonAsync($"/api/Orders/{_existingOrder.OrderId}/statusUpdate", newStatus);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        
+
         Dbcontext.ChangeTracker.Clear();
-        
+
         var orderInDb = Dbcontext.Orders.FirstOrDefault(o => o.OrderId == _existingOrder.OrderId);
         Assert.That(orderInDb?.Status, Is.EqualTo(newStatus));
     }
-    
+
     [Test]
     public async Task DeleteOrderItem_ValidData()
     {
@@ -197,17 +203,18 @@ public class OrdersControllerTest : BaseIntegrationTest
         };
         Dbcontext.OrderItems.Add(orderItem);
         await Dbcontext.SaveChangesAsync();
-        
-        var response = await HttpClient.DeleteAsync($"/api/Orders/{_existingOrder.OrderId}/deleteItem?orderItemId={orderItem.OrderItemId}");
+
+        var response =
+            await HttpClient.DeleteAsync(
+                $"/api/Orders/{_existingOrder.OrderId}/deleteItem?orderItemId={orderItem.OrderItemId}");
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        
+
         Dbcontext.ChangeTracker.Clear();
-        
+
         var itemInDb = Dbcontext.OrderItems.FirstOrDefault(o => o.OrderItemId == orderItem.OrderItemId);
         Assert.That(itemInDb, Is.Null, "Позиция заказа должна быть удалена");
-        
+
         var orderInDb = Dbcontext.Orders.FirstOrDefault(o => o.OrderId == _existingOrder.OrderId);
         Assert.That(orderInDb, Is.Not.Null);
-        
     }
 }

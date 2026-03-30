@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="pizza.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="app.ico" />
   </ItemGroup>
 
@@ -18,6 +22,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="pizza.jpg" />
   </ItemGroup>
 
   <ItemGroup>

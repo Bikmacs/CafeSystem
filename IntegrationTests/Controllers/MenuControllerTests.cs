@@ -3,10 +3,15 @@ using CafeAPI.Models;
 using IntegrationTests.Infrastructure;
 using System.Net;
 using System.Net.Http.Json;
+using Allure.NUnit;
+using Allure.NUnit.Attributes;
 
 namespace IntegrationTests.Controllers
 {
     [TestFixture]
+    [AllureNUnit]
+    [AllureEpic("Управление кафе")]
+    [AllureFeature("Меню")]
     internal class MenuControllerTests : BaseIntegrationTest
     {
         private MenuItem _testMenuItem;

@@ -1,4 +1,5 @@
-﻿using CafeAPI.DTOs.Category;
+﻿using CafeAPI.Data;
+using CafeAPI.DTOs.Category;
 using CafeAPI.DTOs.MenuItems;
 using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Interfaces.IServices;
@@ -25,7 +26,7 @@ namespace CafeAPI.Services
             IMemoryCache cache,
             IOrderItemRepository orderItemRepository,
             ICategoryRepository categoryRepository,
-            DbContext dbContext)
+            CafeDbContext dbContext)
         {
             _menuItemRepository = menuItemRepository;
             _orderItemRepository = orderItemRepository;
@@ -149,48 +150,48 @@ namespace CafeAPI.Services
         }
 
 
-        public async Task<Dictionary<Products, UnitTypes>> AddNewProducts(Products productEnum, decimal quantityToAdd)
-        {
-            try
-            {
-                var productUnits = ProductUnitHelper.GetProductUnits;
-                string productName = productEnum.ToString();
-
-                var ingredient = await _dbContext.Ingredients
-                    .FirstOrDefaultAsync(i => i.Name == productName);
-
-                if (ingredient != null)
-                {
-                    ingredient.Quantity += quantityToAdd;
-                    _dbContext.Ingredients.Update(ingredient);
-                }
-                else
-                {
-                    var unit = productUnits.ContainsKey(productEnum)
-                        ? productUnits[productEnum]
-                        : UnitTypes.Kg; 
-                    
-                    var newIngredient = new Ingredient
-                    {
-                        Name = productName,
-                        Quantity = quantityToAdd,
-                        UnitType = unit.ToString()
-                    };
-
-                    await _dbContext.Ingredients.AddAsync(newIngredient);
-                }
-
-                await _dbContext.SaveChangesAsync();
-
-                return new Dictionary<Products, UnitTypes>
-                {
-                    { productEnum, productUnits[productEnum] }
-                };
-            }
-            catch (Exception exception)
-            {
-                throw new Exception($"Ошибка при добавлении продукта '{productEnum}' на склад: {exception.Message}");
-            }
-        }
+        // public async Task<Dictionary<Products, UnitTypes>> AddNewProducts(Products productEnum, decimal quantityToAdd)
+        // {
+        //     try
+        //     {
+        //         var productUnits = ProductUnitHelper.GetProductUnits;
+        //         string productName = productEnum.ToString();
+        //
+        //         var ingredient = await _dbContext.Ingredients
+        //             .FirstOrDefaultAsync(i => i.Name == productName);
+        //
+        //         if (ingredient != null)
+        //         {
+        //             ingredient.Quantity += quantityToAdd;
+        //             _dbContext.Ingredients.Update(ingredient);
+        //         }
+        //         else
+        //         {
+        //             var unit = productUnits.ContainsKey(productEnum)
+        //                 ? productUnits[productEnum]
+        //                 : UnitTypes.Kg; 
+        //             
+        //             var newIngredient = new Ingredient
+        //             {
+        //                 Name = productName,
+        //                 Quantity = quantityToAdd,
+        //                 UnitType = unit.ToString()
+        //             };
+        //
+        //             await _dbContext.Ingredients.AddAsync(newIngredient);
+        //         }
+        //
+        //         await _dbContext.SaveChangesAsync();
+        //
+        //         return new Dictionary<Products, UnitTypes>
+        //         {
+        //             { productEnum, productUnits[productEnum] }
+        //         };
+        //     }
+        //     catch (Exception exception)
+        //     {
+        //         throw new Exception($"Ошибка при добавлении продукта '{productEnum}' на склад: {exception.Message}");
+        //     }
+        // }
     }
 }

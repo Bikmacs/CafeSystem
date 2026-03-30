@@ -1,8 +1,10 @@
 ﻿using CafeClient.DTOs;
 using CafeClient.DTOs.Orders;
 using CafeClient.Services;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -209,6 +211,42 @@ namespace CafeClient.Pages
             await LoadOrders();
         }
 
+        private async void Button_Click_ExcelAsync(object sender, RoutedEventArgs e)
+        {
+            bool isMonthly = true;
+
+            var fileBytes = await _apiService.ExportRevenueExcelAsync(isMonthly);
+
+            if (fileBytes != null)
+            {
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel Workbook (*.xlsx)|*.xlsx",
+                    Title = "Сохранить отчет по выручке",
+                    FileName = isMonthly
+                        ? $"Отчет_Выручка_Месяц_{DateTime.Now:MM-yyyy}.xlsx"
+                        : $"Отчет_Выручка_День_{DateTime.Now:dd-MM-yyyy}.xlsx"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    try
+                    {
+                        await File.WriteAllBytesAsync(saveFileDialog.FileName, fileBytes);
+                        MessageBox.Show("Отчет успешно сохранен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show($"Ошибка при сохранении файла (возможно, он открыт в Excel):\n{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Не удалось скачать отчет с сервера.", "Ошибка соединения", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void RestoreSelection(int orderId)
         {
             var orders = OrdersListView.ItemsSource as IEnumerable<OrderResponseDto>;
@@ -243,7 +281,6 @@ namespace CafeClient.Pages
         {
             NavigationService.Navigate(new KitchenPage(_apiService));
         }
-
         private void AddMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new MenuPage(_apiService));
