@@ -46,10 +46,13 @@
                     <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="Gray"/>
                     <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="Green" Margin="0,0,0,20"/>
 
-                    <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="0,5" Background="Green" BorderBrush="Green" Click="Buy_Button"/>
-                    <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="0,5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="Red" Foreground="Red" Click="Delete_Button"/>
+                    <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="#A0A0A0"/>
+                    <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="#81C784" Margin="0,0,0,20"/>
 
-                    <Separator Margin="0,15"/>
+                    <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="0,5" Background="#4CAF50" BorderBrush="#4CAF50" Foreground="#FFFFFF" Click="Buy_Button"/>
+                    <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="0,5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="#E53935" Foreground="#E53935" Click="Delete_Button"/>
+
+                    <Separator Margin="0,15" Background="#3E3E42"/>
 
                     <Button x:Name="BtnSplitBill" 
                             Content="ВЫДЕЛЕННОЕ В НОВЫЙ ЧЕК" 
@@ -160,6 +163,7 @@
                             </StackPanel>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
+
                     <TabControl.ContentTemplate>
                         <DataTemplate>
                             <Grid Background="#EEEEEE">
@@ -168,7 +172,6 @@
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
-
                                                 <RowDefinition Height="*"/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>

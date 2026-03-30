@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       Title="Управление меню"
       d:DesignWidth="1366" d:DesignHeight="768" 
-      Background="White">
+      Background="#1A1A1B">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,6 +22,7 @@
         <Button Content="НАЗАД" 
                 Style="{StaticResource MaterialDesignOutlinedButton}"
                 Click="Back_Button" 
+                Foreground="#E0E0E0"
                 HorizontalAlignment="Left" Margin="10,0,0,0"/>
 
         <TextBlock Text="УПРАВЛЕНИЕ МЕНЮ" 
@@ -53,7 +54,8 @@
                              materialDesign:HintAssist.Hint="Цена (₽)"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              PreviewTextInput="NumericOnly"
-                             Margin="0,0,0,15"/>
+                             Margin="0,0,0,15"
+                             Foreground="#E0E0E0"/>
 
                     <TextBox Text="{Binding NewMenuItem.Description, UpdateSourceTrigger=PropertyChanged}"
                              materialDesign:HintAssist.Hint="Описание состава"
