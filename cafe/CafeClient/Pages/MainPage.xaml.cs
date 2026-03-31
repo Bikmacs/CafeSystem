@@ -285,5 +285,10 @@ namespace CafeClient.Pages
         {
             NavigationService.Navigate(new MenuPage(_apiService));
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -40,7 +40,11 @@ namespace CafeAPI.Repositories
 
         public async Task<List<User>> GetUsersAsync()
         {   
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(u => u.Role)           
+                .Include(u => u.Orders)         
+                .ThenInclude(o => o.OrderItems) 
+                .ToListAsync();
         }
 
         public async Task UpdateUser(User user)

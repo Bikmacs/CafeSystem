@@ -35,8 +35,8 @@
             <TextBox Grid.Column="0" VerticalContentAlignment="Center" FontSize="17" Padding="10" Margin="5"
                      materialDesign:HintAssist.Hint="Поиск по меню..." Style="{StaticResource MaterialDesignOutlinedTextBox}" TextChanged="TextBox_TextChanged"/>
 
-            <Button Grid.Column="1" Height="40" Margin="5" Content="Создать заказ" Click="CreateOrder_Click" "/>
-            <Button Grid.Column="2" Height="40" Margin="5" Content="Обновить" Click="RefreshButton_Click""/>
+            <Button Grid.Column="1" Height="40" Margin="5" Content="Создать заказ" Click="CreateOrder_Click"/>
+            <Button Grid.Column="2" Height="40" Margin="5" Content="Обновить" Click="RefreshButton_Click"/>
 
             <ComboBox Grid.Column="3" Width="150" Height="40" Margin="5" VerticalContentAlignment="Center" HorizontalAlignment="Stretch">
                 <ComboBoxItem IsEnabled="False" Content="Выберите действие"/>
@@ -67,7 +67,7 @@
                               Background="Transparent"
                               MouseDoubleClick="OrdersListView_MouseDoubleClick"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>

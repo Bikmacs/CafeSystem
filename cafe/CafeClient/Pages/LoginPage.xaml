@@ -12,20 +12,24 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="1" Background="#F5F5F5"/>
+        <Border Grid.Column="1" Background="#F5F5F5" />
+
+        <Grid Grid.Column="0">
+            <Image Source="/pizza.jpg" Stretch="UniformToFill" />
+        </Grid>
 
         <StackPanel Grid.Column="1"
-                    Width="350"                    
+                    Width="350"
                     Height="400">
 
             <TextBlock Text="Войдите в свою учетную запись"
                        Margin="13,0,0,20"
                        FontSize="22"
-                       FontWeight="SemiBold"/>
+                       FontWeight="SemiBold" />
             <TextBox
                 Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
@@ -35,7 +39,7 @@
                 Margin="10"
                 materialDesign:HintAssist.Hint="Login"
                 materialDesign:HintAssist.IsFloating="True"
-                materialDesign:TextFieldAssist.DecorationVisibility="Visible"/>
+                materialDesign:TextFieldAssist.DecorationVisibility="Visible" />
 
             <PasswordBox
                 x:Name="UserPasswordBox"
@@ -46,17 +50,17 @@
                 Margin="10"
                 materialDesign:HintAssist.Hint="Password"
                 materialDesign:HintAssist.IsFloating="True"
-                materialDesign:TextFieldAssist.DecorationVisibility="Visible"/>
+                materialDesign:TextFieldAssist.DecorationVisibility="Visible" />
 
             <Button
                 Command="{Binding LoginCommand}"
-                CommandParameter="{Binding ElementName=UserPasswordBox}" 
+                CommandParameter="{Binding ElementName=UserPasswordBox}"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Width="300"
                 Height="45"
                 FontSize="16"
                 FontWeight="SemiBold"
-                Content="ВХОД" Click="Button_Click"/>
+                Content="ВХОД" Click="Button_Click" />
 
         </StackPanel>
     </Grid>

@@ -5,12 +5,14 @@ using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Interfaces.IServices;
 using CafeAPI.Models;
 using ClosedXML.Excel;
+using Microsoft.Identity.Client;
 
 namespace CafeAPI.Services
 {
     public class OrderService(
         IOrderRepository orderRepository,
         IMenuItemRepository menuItemRepository,
+        IUserRepository userRepository,
         IOrderItemRepository itemRepository)
         : IOrderService
     {
@@ -275,58 +277,116 @@ namespace CafeAPI.Services
 
         public async Task<byte[]> ViruchkaShowExcel(bool isMonthly)
         {
+            var currentCafeTime = DateTime.UtcNow.AddHours(5);
             var dateStart = isMonthly
-                ? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)
-                : DateTime.Today;
-
-            var allOrders = await orderRepository.GetAllAsync();
-
-            var reportOrders = allOrders
-                .Where(st => st.Status == "Оплачен" && st.CreatedAt >= dateStart)
-                .OrderBy(st => st.CreatedAt)
-                .ToList();
-
-            var total = reportOrders
-                .Select(r => r.OrderItems.Sum(oi => oi.UnitPrice * oi.Quantity)).Sum();
+                ? new DateTime(currentCafeTime.Year, currentCafeTime.Month, 1)
+                : currentCafeTime.Date;
+            var (reportOrders, total) = await GetReportDataAsync(isMonthly);
 
             using var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("Отчет по выручке");
+            var ws1 = workbook.Worksheets.Add("Общая выручка");
 
-            worksheet.Cell("A1").Value = isMonthly ? "Отчет за месяц:" : "Отчет за день:";
-            worksheet.Cell("B1").Value = dateStart.ToShortDateString();
+            ws1.Cell("A1").Value = isMonthly ? "ЕЖЕМЕСЯЧНЫЙ ОТЧЕТ" : "ЕЖЕДНЕВНЫЙ ОТЧЕТ";
+            ws1.Cell("A1").Style.Font.Bold = true;
+            ws1.Cell("A1").Style.Font.FontSize = 14;
 
-            worksheet.Cell("A2").Value = "Итоговая выручка:";
-            worksheet.Cell("B2").Value = total;
-            worksheet.Cell("B2").Style.NumberFormat.Format = "#,##0.00\" ₽\"";
-            worksheet.Cell("A1").Style.Font.Bold = true;
-            worksheet.Cell("A2").Style.Font.Bold = true;
+            ws1.Cell("A2").Value = "Период начала:";
+            ws1.Cell("B2").Value = dateStart.ToShortDateString();
 
-            worksheet.Cell("A4").Value = "ID Заказа";
-            worksheet.Cell("B4").Value = "Время";
-            worksheet.Cell("C4").Value = "Столик";
-            worksheet.Cell("D4").Value = "Сумма";
-            worksheet.Range("A4:D4").Style.Font.Bold = true;
-            worksheet.Range("A4:D4").Style.Fill.BackgroundColor = XLColor.LightGray;
+            ws1.Cell("A3").Value = "ИТОГО ВЫРУЧКА:";
+            ws1.Cell("B3").Value = total;
+            ws1.Cell("B3").Style.NumberFormat.Format = "#,##0.00\" ₽\"";
+            ws1.Cell("B3").Style.Font.Bold = true;
+            ws1.Cell("B3").Style.Font.FontColor = XLColor.DarkGreen;
 
-            var currentRow = 5;
+            var headerRange = ws1.Range("A5:E5");
+            ws1.Cell("A5").Value = "ID Заказа";
+            ws1.Cell("B5").Value = "Дата и время";
+            ws1.Cell("C5").Value = "Столик";
+            ws1.Cell("D5").Value = "Официант";
+            ws1.Cell("E5").Value = "Сумма";
+
+            headerRange.Style.Font.Bold = true;
+            headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+            headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+            var currentRow = 6;
             foreach (var order in reportOrders)
             {
-                worksheet.Cell(currentRow, 1).Value = order.OrderId;
-                worksheet.Cell(currentRow, 2).Value = order.CreatedAt.ToString("HH:mm");
-                worksheet.Cell(currentRow, 3).Value = order.TableNumber;
+                ws1.Cell(currentRow, 1).Value = order.OrderId;
+                ws1.Cell(currentRow, 2).Value = order.CreatedAt.ToString("g"); // Короткий формат дата+время
+                ws1.Cell(currentRow, 3).Value = $"№ {order.TableNumber}";
+                ws1.Cell(currentRow, 4).Value = order.User?.FullName ?? "Не указан";
 
-                var orderSum = order.OrderItems.Sum(oi => oi.UnitPrice * oi.Quantity);
-                worksheet.Cell(currentRow, 4).Value = orderSum;
-                worksheet.Cell(currentRow, 4).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
-
+                var orderSum = order.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0;
+                ws1.Cell(currentRow, 5).Value = orderSum;
+                ws1.Cell(currentRow, 5).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
                 currentRow++;
             }
 
-            worksheet.Columns().AdjustToContents();
+            ws1.Columns().AdjustToContents();
+
+            var ws2 = workbook.Worksheets.Add("Статистика сотрудников");
+
+            ws2.Cell("A1").Value = "ЭФФЕКТИВНОСТЬ ПЕРСОНАЛА";
+            ws2.Cell("A1").Style.Font.Bold = true;
+            ws2.Cell("A1").Style.Font.FontSize = 14;
+
+            ws2.Cell("A3").Value = "ФИО Официанта";
+            ws2.Cell("B3").Value = "Кол-во чеков";
+            ws2.Cell("C3").Value = "Общая выручка";
+            ws2.Range("A3:C3").Style.Font.Bold = true;
+            ws2.Range("A3:C3").Style.Fill.BackgroundColor = XLColor.PastelBlue;
+
+            var staffStats = reportOrders
+                .GroupBy(o => o.User?.FullName ?? "Неизвестно")
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Count = g.Count(),
+                    Sum = g.Sum(o => o.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0)
+                })
+                .OrderByDescending(s => s.Sum);
+
+            var staffRow = 4;
+            foreach (var stat in staffStats)
+            {
+                ws2.Cell(staffRow, 1).Value = stat.Name;
+                ws2.Cell(staffRow, 2).Value = stat.Count;
+                ws2.Cell(staffRow, 3).Value = stat.Sum;
+                ws2.Cell(staffRow, 3).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
+                staffRow++;
+            }
+
+            ws2.Columns().AdjustToContents();
 
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);
             return stream.ToArray();
+        }
+
+        private async Task<(List<Order> Orders, decimal TotalSum)> GetReportDataAsync(bool isMonthly)
+        {
+            var dateStart = isMonthly ? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1) : DateTime.Today;
+
+            var allUsers = await userRepository.GetUsersAsync();
+
+            var reportOrders = allUsers
+                .Where(u => u.Role.RoleId == 2)
+                .SelectMany(u => u.Orders)
+                .Where(o => 
+                    !string.IsNullOrWhiteSpace(o.Status) && 
+                    o.Status.Trim().Equals("Оплачен", StringComparison.OrdinalIgnoreCase) && 
+                    o.CreatedAt >= dateStart)
+                .OrderBy(o => o.CreatedAt)
+                .ToList();
+
+            var total = reportOrders.Sum(order =>
+                order.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0);
+
+            return (reportOrders, total);
+
+            return (reportOrders, total);
         }
     }
 }

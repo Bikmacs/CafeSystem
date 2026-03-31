@@ -11,44 +11,31 @@ using static CafeAPI.Models.Helpers.ProductUnitHelper;
 
 namespace CafeAPI.Services
 {
-    public class MenuService : IMenuService
+    public class MenuService(
+        IMenuItemRepository menuItemRepository,
+        IMemoryCache cache,
+        IOrderItemRepository orderItemRepository,
+        ICategoryRepository categoryRepository,
+        CafeDbContext dbContext)
+        : IMenuService
     {
-        private readonly DbContext _dbContext;
-        private readonly IMenuItemRepository _menuItemRepository;
-        private readonly IOrderItemRepository _orderItemRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IMemoryCache _cache;
         private const string MenuCacheKey = "menu_cache";
         private const string CategoryCacheKey = "category_cache";
 
-        public MenuService(
-            IMenuItemRepository menuItemRepository,
-            IMemoryCache cache,
-            IOrderItemRepository orderItemRepository,
-            ICategoryRepository categoryRepository,
-            CafeDbContext dbContext)
-        {
-            _menuItemRepository = menuItemRepository;
-            _orderItemRepository = orderItemRepository;
-            _categoryRepository = categoryRepository;
-            _cache = cache;
-            _dbContext = dbContext;
-        }
-
         public async Task<IEnumerable<MenuItemResponseDto>> GetMenuAsync()
         {
-            if (_cache.TryGetValue(MenuCacheKey, out IEnumerable<MenuItemResponseDto>? menu))
+            if (cache.TryGetValue(MenuCacheKey, out IEnumerable<MenuItemResponseDto>? menu))
             {
                 if (menu != null) return menu;
             }
 
-            var menuItems = await _menuItemRepository.GetAllMenuItemsAsync();
+            var menuItems = await menuItemRepository.GetAllMenuItemsAsync();
             /*
             if(menuItems == null) return Enumerable.Empty<MenuItemResponseDto>();
             */
             var result = menuItems.Select(FromEntity).ToList();
 
-            _cache.Set(
+            cache.Set(
                 MenuCacheKey,
                 result,
                 TimeSpan.FromMinutes(1)
@@ -59,7 +46,7 @@ namespace CafeAPI.Services
 
         public async Task<MenuItemResponseDto> AddItemMenuAsync(CreateMenuItemDto createMenuItemDto)
         {
-            var backItem = await _menuItemRepository.GetMenuItemByNameAsync(createMenuItemDto.Name);
+            var backItem = await menuItemRepository.GetMenuItemByNameAsync(createMenuItemDto.Name);
             if (backItem != null) throw new InvalidOperationException("Блюдо уже существует");
 
             var menuItem = new MenuItem
@@ -71,15 +58,15 @@ namespace CafeAPI.Services
                 Available = createMenuItemDto.Available
             };
 
-            await _menuItemRepository.AddMenuItemAsync(menuItem);
-            _cache.Remove(MenuCacheKey);
+            await menuItemRepository.AddMenuItemAsync(menuItem);
+            cache.Remove(MenuCacheKey);
 
             return FromEntity(menuItem);
         }
 
         public async Task<UpdateMenuItemDto> UpdateItemMenu(int id, UpdateMenuItemDto updateMenuItemDto)
         {
-            var backItem = await _menuItemRepository.GetMenuItemByIdAsync(id);
+            var backItem = await menuItemRepository.GetMenuItemByIdAsync(id);
             if (backItem == null) return null!;
 
             backItem.Name = !string.IsNullOrEmpty(updateMenuItemDto.Name) ? updateMenuItemDto.Name : backItem.Name;
@@ -92,19 +79,19 @@ namespace CafeAPI.Services
                 backItem.CategoryId = updateMenuItemDto.CategoryId.Value;
             }
 
-            await _menuItemRepository.UpdateItemMenuAsync(id, backItem);
+            await menuItemRepository.UpdateItemMenuAsync(id, backItem);
 
-            _cache.Remove(MenuCacheKey);
+            cache.Remove(MenuCacheKey);
             return updateMenuItemDto;
         }
 
         public async Task<bool> DeleteItemMenu(int id)
         {
-            var backItem = await _menuItemRepository.GetMenuItemByIdAsync(id);
+            var backItem = await menuItemRepository.GetMenuItemByIdAsync(id);
             if (backItem == null) return false;
 
-            await _menuItemRepository.DeleteMenuItemAsync(backItem);
-            _cache.Remove(MenuCacheKey);
+            await menuItemRepository.DeleteMenuItemAsync(backItem);
+            cache.Remove(MenuCacheKey);
 
             return true;
         }
@@ -117,12 +104,12 @@ namespace CafeAPI.Services
 
         public async Task<List<CategoryDto>> GetAll()
         {
-            if (_cache.TryGetValue(CategoryCacheKey, out List<CategoryDto>? categories))
+            if (cache.TryGetValue(CategoryCacheKey, out List<CategoryDto>? categories))
             {
                 if (categories != null) return categories;
             }
 
-            var categoryEntities = await _categoryRepository.GetAllAsync();
+            var categoryEntities = await categoryRepository.GetAllAsync();
             if (!categoryEntities.Any()) return new List<CategoryDto>();
 
             var result = categoryEntities.Select(c => new CategoryDto
@@ -131,7 +118,7 @@ namespace CafeAPI.Services
                 Name = c.Name
             }).ToList();
 
-            _cache.Set(CategoryCacheKey, result, TimeSpan.FromMinutes(10));
+            cache.Set(CategoryCacheKey, result, TimeSpan.FromMinutes(10));
 
             return result;
         }

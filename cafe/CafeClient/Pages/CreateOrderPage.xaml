@@ -9,19 +9,16 @@
 
     <StackPanel Margin="30" Width="300" VerticalAlignment="Center">
 
-        <TextBlock Text="Новый заказ" FontSize="24" FontWeight="Bold" 
-                   Margin="0,0,0,20" HorizontalAlignment="Center" Foreground="#F5E6C8"/>
+        <TextBlock Text="Новый заказ" FontSize="24"  
+                   Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
-        <TextBlock Text="Выберите стол:" FontSize="16" Margin="0,0,0,5" Foreground="#C47B3A"/>
+        <TextBlock Text="Выберите стол:" FontSize="16" Margin="0,0,0,5"/>
 
         <ComboBox x:Name="TableComboBox"
                   Height="50" 
                   Margin="0,0,0,20"
                   FontSize="16"
                   Padding="10,0"
-                  Foreground="#F5E6C8"
-                  Background="#2E1A0E"
-                  BorderBrush="#7A4A2E"
                   ItemsSource="{Binding Tables}" 
                   DisplayMemberPath="DisplayName" 
                   SelectedItem="{Binding SelectedTable, Mode=TwoWay}"/>
@@ -30,16 +27,11 @@
                 Height="50"
                 FontSize="16"
                 FontWeight="Bold"
-                Background="#C47B3A"
-                BorderBrush="#C47B3A"
-                Foreground="#1C1008"
                 Click="CreateOrder_Click"/>
 
         <Button Content="Назад"
                 Margin="0,10"
                 Style="{StaticResource MaterialDesignOutlinedButton}"
-                BorderBrush="#7A4A2E"
-                Foreground="#F5E6C8"
                 Click="BackButton_Click"/>
     </StackPanel>
 </Page>

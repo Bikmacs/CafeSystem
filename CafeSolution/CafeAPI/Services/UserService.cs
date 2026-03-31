@@ -5,19 +5,11 @@ using CafeAPI.Models;
 
 namespace CafeAPI.Services
 {
-    public class UserService : IUserService
+    public class UserService(IUserRepository userRepository, ITokenService tokenService) : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly ITokenService _tokenService;
-        public UserService(IUserRepository userRepository, ITokenService tokenService)
-        {
-            _userRepository = userRepository;
-            _tokenService = tokenService;
-        }
-
         public async Task<UserResponseDto?> CreateUserAsync(CreateUserDto createUserDto)
         {
-            var existingUser = await _userRepository.GetByUsernameAsync(createUserDto.Login);
+            var existingUser = await userRepository.GetByUsernameAsync(createUserDto.Login);
             if (existingUser != null)
             {
                 return null;
@@ -34,7 +26,7 @@ namespace CafeAPI.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _userRepository.AddUser(user);
+            await userRepository.AddUser(user);
 
             return new UserResponseDto
             {
@@ -50,16 +42,16 @@ namespace CafeAPI.Services
 
         public async Task<bool> DeleteUserAsync(int id)
         {
-            var userDelete = await _userRepository.GetUserByIdAsync(id);
+            var userDelete = await userRepository.GetUserByIdAsync(id);
             if (userDelete == null) return false;
 
-            await _userRepository.DeleteUser(id);
+            await userRepository.DeleteUser(id);
             return true;
         }
 
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
-            var users = await _userRepository.GetUsersAsync();
+            var users = await userRepository.GetUsersAsync();
 
             return users.Select(user => new UserResponseDto
             {
@@ -73,7 +65,7 @@ namespace CafeAPI.Services
 
         public async Task<UserResponseDto?> GetUserByIdAsync(int id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await userRepository.GetUserByIdAsync(id);
 
             return user != null ? new UserResponseDto
             {
@@ -87,7 +79,7 @@ namespace CafeAPI.Services
 
         public async Task<LoginResponseDto?> LoginAsync(LoginUserDto loginUserDto)
         {
-            var user = await _userRepository.GetByUsernameAsync(loginUserDto.Login);
+            var user = await userRepository.GetByUsernameAsync(loginUserDto.Login);
             if (user == null)
             {
                 return null;
@@ -98,7 +90,7 @@ namespace CafeAPI.Services
             {
                 return null;
             }
-            string token = _tokenService.CreateToken(user);
+            string token = tokenService.CreateToken(user);
 
             return new LoginResponseDto
             {
@@ -116,12 +108,12 @@ namespace CafeAPI.Services
 
         public async Task<UserResponseDto?> UpdateUserAsync(int id, CreateUserDto updateUserDto)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await userRepository.GetUserByIdAsync(id);
             if (user == null) return null;
 
             user.FullName = updateUserDto.FullName;
 
-            await _userRepository.UpdateUser(user);
+            await userRepository.UpdateUser(user);
 
             return new UserResponseDto
             {

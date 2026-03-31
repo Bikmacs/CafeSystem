@@ -9,14 +9,9 @@ using System.Text;
 
 namespace CafeAPI.Services
 {
-    public class TokenService : ITokenService
+    public class TokenService(IOptions<JwtSettings> options) : ITokenService
     {
-        private readonly JwtSettings _jwtSettings;
-
-        public TokenService(IOptions<JwtSettings> options)
-        {
-            _jwtSettings = options.Value;
-        }
+        private readonly JwtSettings _jwtSettings = options.Value;
 
         public string CreateToken(User user)
         {

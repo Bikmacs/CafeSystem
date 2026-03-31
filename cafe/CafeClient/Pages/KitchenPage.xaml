@@ -24,6 +24,7 @@
 
                 <TextBlock Text="КУХОННЫЙ ТЕРМИНАЛ" 
                            Foreground="White" 
+                           
                            FontSize="24" 
                            FontWeight="Bold" 
                            HorizontalAlignment="Center" 
