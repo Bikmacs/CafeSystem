@@ -1,6 +1,7 @@
 ﻿using CafeAPI.Data;
 using CafeAPI.DTOs.Category;
 using CafeAPI.DTOs.MenuItems;
+using CafeAPI.DTOs.MenuItems.Dish;
 using CafeAPI.Interfaces.IRepository;
 using CafeAPI.Interfaces.IServices;
 using CafeAPI.Models;
@@ -86,6 +87,7 @@ namespace CafeAPI.Services
             backItem.Description = updateMenuItemDto.Description ?? backItem.Description;
             backItem.Price = updateMenuItemDto.Price ?? backItem.Price;
             backItem.Available = updateMenuItemDto.Available ?? backItem.Available;
+            backItem.Image = updateMenuItemDto.Image ?? backItem.Image;
 
             if (updateMenuItemDto.CategoryId.HasValue)
             {
@@ -145,7 +147,17 @@ namespace CafeAPI.Services
                 Description = item.Description,
                 Price = item.Price,
                 Category = item.Category?.Name ?? "Категория не загружена",
-                Available = item.Available
+                Available = item.Available,
+                Image = item.Image,
+                
+                Ingredients = item.DishItems?.Select(di => new DishItemResponse
+                {
+                    
+                    IngredientName = di.Ingredient?.Name ?? "Неизвестно",
+                    Amount = di.Amount,
+                    Unit = di.UnitType.ToString()
+                    
+                }).ToList() ?? new List<DishItemResponse>()
             };
         }
 

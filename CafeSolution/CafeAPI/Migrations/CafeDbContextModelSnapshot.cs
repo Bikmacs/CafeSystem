@@ -119,6 +119,784 @@ namespace CafeAPI.Migrations
                     b.HasIndex("MenuItemId");
 
                     b.ToTable("DishItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Amount = 150m,
+                            IngredientId = 1,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Amount = 80m,
+                            IngredientId = 22,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Amount = 50m,
+                            IngredientId = 21,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Amount = 100m,
+                            IngredientId = 18,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Amount = 30m,
+                            IngredientId = 7,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 1,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Amount = 150m,
+                            IngredientId = 3,
+                            MenuItemId = 2,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Amount = 50m,
+                            IngredientId = 17,
+                            MenuItemId = 2,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Amount = 40m,
+                            IngredientId = 20,
+                            MenuItemId = 2,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 2,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Amount = 150m,
+                            IngredientId = 18,
+                            MenuItemId = 3,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Amount = 0.15m,
+                            IngredientId = 6,
+                            MenuItemId = 3,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Amount = 20m,
+                            IngredientId = 10,
+                            MenuItemId = 3,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 3,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Amount = 120m,
+                            IngredientId = 3,
+                            MenuItemId = 4,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Amount = 40m,
+                            IngredientId = 9,
+                            MenuItemId = 4,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Amount = 100m,
+                            IngredientId = 21,
+                            MenuItemId = 4,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Amount = 0.5m,
+                            IngredientId = 25,
+                            MenuItemId = 4,
+                            UnitType = 0
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Amount = 80m,
+                            IngredientId = 9,
+                            MenuItemId = 5,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Amount = 30m,
+                            IngredientId = 19,
+                            MenuItemId = 5,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Amount = 0.03m,
+                            IngredientId = 14,
+                            MenuItemId = 5,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Amount = 3m,
+                            IngredientId = 13,
+                            MenuItemId = 5,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Amount = 150m,
+                            IngredientId = 21,
+                            MenuItemId = 6,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Amount = 80m,
+                            IngredientId = 20,
+                            MenuItemId = 6,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 6,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Amount = 0.2m,
+                            IngredientId = 25,
+                            MenuItemId = 7,
+                            UnitType = 0
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Amount = 30m,
+                            IngredientId = 9,
+                            MenuItemId = 7,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Amount = 0.01m,
+                            IngredientId = 14,
+                            MenuItemId = 7,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Amount = 150m,
+                            IngredientId = 1,
+                            MenuItemId = 8,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Amount = 30m,
+                            IngredientId = 9,
+                            MenuItemId = 8,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 8,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 8,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Amount = 120m,
+                            IngredientId = 9,
+                            MenuItemId = 9,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 9,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Amount = 300m,
+                            IngredientId = 1,
+                            MenuItemId = 10,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 10,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Amount = 6m,
+                            IngredientId = 13,
+                            MenuItemId = 10,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Amount = 250m,
+                            IngredientId = 3,
+                            MenuItemId = 11,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 11,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 11,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Amount = 250m,
+                            IngredientId = 2,
+                            MenuItemId = 12,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Amount = 10m,
+                            IngredientId = 12,
+                            MenuItemId = 12,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 12,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Amount = 200m,
+                            IngredientId = 11,
+                            MenuItemId = 13,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Amount = 150m,
+                            IngredientId = 9,
+                            MenuItemId = 13,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 13,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 13,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Amount = 200m,
+                            IngredientId = 11,
+                            MenuItemId = 14,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Amount = 100m,
+                            IngredientId = 9,
+                            MenuItemId = 14,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Amount = 80m,
+                            IngredientId = 2,
+                            MenuItemId = 14,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 14,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Amount = 200m,
+                            IngredientId = 11,
+                            MenuItemId = 15,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Amount = 250m,
+                            IngredientId = 9,
+                            MenuItemId = 15,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Amount = 0.02m,
+                            IngredientId = 14,
+                            MenuItemId = 15,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Amount = 150m,
+                            IngredientId = 17,
+                            MenuItemId = 16,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Amount = 120m,
+                            IngredientId = 5,
+                            MenuItemId = 16,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Amount = 30m,
+                            IngredientId = 9,
+                            MenuItemId = 16,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 16,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Amount = 150m,
+                            IngredientId = 17,
+                            MenuItemId = 17,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Amount = 40m,
+                            IngredientId = 10,
+                            MenuItemId = 17,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Amount = 60m,
+                            IngredientId = 9,
+                            MenuItemId = 17,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Amount = 3m,
+                            IngredientId = 13,
+                            MenuItemId = 17,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Amount = 150m,
+                            IngredientId = 17,
+                            MenuItemId = 18,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Amount = 30m,
+                            IngredientId = 10,
+                            MenuItemId = 18,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Amount = 30m,
+                            IngredientId = 9,
+                            MenuItemId = 18,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 18,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Amount = 120m,
+                            IngredientId = 8,
+                            MenuItemId = 19,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 68,
+                            Amount = 40m,
+                            IngredientId = 12,
+                            MenuItemId = 19,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 69,
+                            Amount = 0.05m,
+                            IngredientId = 6,
+                            MenuItemId = 19,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 70,
+                            Amount = 60m,
+                            IngredientId = 11,
+                            MenuItemId = 20,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 71,
+                            Amount = 50m,
+                            IngredientId = 10,
+                            MenuItemId = 20,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 72,
+                            Amount = 50m,
+                            IngredientId = 12,
+                            MenuItemId = 20,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 73,
+                            Amount = 200m,
+                            IngredientId = 8,
+                            MenuItemId = 21,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Amount = 50m,
+                            IngredientId = 11,
+                            MenuItemId = 21,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 75,
+                            Amount = 60m,
+                            IngredientId = 12,
+                            MenuItemId = 21,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 76,
+                            Amount = 40m,
+                            IngredientId = 10,
+                            MenuItemId = 21,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 77,
+                            Amount = 0.2m,
+                            IngredientId = 6,
+                            MenuItemId = 22,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 78,
+                            Amount = 10m,
+                            IngredientId = 12,
+                            MenuItemId = 22,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 79,
+                            Amount = 15m,
+                            IngredientId = 12,
+                            MenuItemId = 23,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 80,
+                            Amount = 5m,
+                            IngredientId = 12,
+                            MenuItemId = 24,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Amount = 250m,
+                            IngredientId = 18,
+                            MenuItemId = 25,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 82,
+                            Amount = 0.1m,
+                            IngredientId = 14,
+                            MenuItemId = 25,
+                            UnitType = 5
+                        },
+                        new
+                        {
+                            Id = 83,
+                            Amount = 5m,
+                            IngredientId = 13,
+                            MenuItemId = 25,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 84,
+                            Amount = 150m,
+                            IngredientId = 15,
+                            MenuItemId = 26,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 85,
+                            Amount = 50m,
+                            IngredientId = 20,
+                            MenuItemId = 26,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 86,
+                            Amount = 30m,
+                            IngredientId = 19,
+                            MenuItemId = 26,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 26,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Amount = 100m,
+                            IngredientId = 21,
+                            MenuItemId = 27,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Amount = 60m,
+                            IngredientId = 20,
+                            MenuItemId = 27,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Amount = 60m,
+                            IngredientId = 22,
+                            MenuItemId = 27,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Amount = 3m,
+                            IngredientId = 13,
+                            MenuItemId = 27,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Amount = 15m,
+                            IngredientId = 12,
+                            MenuItemId = 28,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Amount = 3m,
+                            IngredientId = 13,
+                            MenuItemId = 28,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Amount = 10m,
+                            IngredientId = 12,
+                            MenuItemId = 29,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 95,
+                            Amount = 4m,
+                            IngredientId = 13,
+                            MenuItemId = 29,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 96,
+                            Amount = 80m,
+                            IngredientId = 7,
+                            MenuItemId = 30,
+                            UnitType = 4
+                        },
+                        new
+                        {
+                            Id = 97,
+                            Amount = 3m,
+                            IngredientId = 13,
+                            MenuItemId = 30,
+                            UnitType = 4
+                        });
                 });
 
             modelBuilder.Entity("CafeAPI.Models.Indigriend", b =>
@@ -133,9 +911,164 @@ namespace CafeAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("StockQuantity")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Indigriend");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Говядина",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Свинина",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Курица",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Индейка",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Фарш",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Молоко",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Сметана",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Творог",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Сыр",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "СливочноеМасло",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Мука",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Сахар",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Соль",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "ПодсолнечноеМасло",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Рис",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Гречка",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "МакаронныеИзделия",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Картофель",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "ЛукРепчатый",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Морковь",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Капуста",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Свекла",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "ХлебПшеничный",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "ХлебРжаной",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Батон",
+                            StockQuantity = 0m
+                        });
                 });
 
             modelBuilder.Entity("CafeAPI.Models.MenuItem", b =>
@@ -156,6 +1089,10 @@ namespace CafeAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -502,36 +1439,6 @@ namespace CafeAPI.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("CafeAPI.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("CafeAPI.Models.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -691,17 +1598,6 @@ namespace CafeAPI.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("CafeAPI.Models.Payment", b =>
-                {
-                    b.HasOne("CafeAPI.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("CafeAPI.Models.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("CafeAPI.Models.User", b =>
                 {
                     b.HasOne("CafeAPI.Models.Role", "Role")
@@ -733,8 +1629,6 @@ namespace CafeAPI.Migrations
             modelBuilder.Entity("CafeAPI.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-
-                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("CafeAPI.Models.Role", b =>

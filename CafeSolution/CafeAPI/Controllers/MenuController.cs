@@ -4,11 +4,12 @@ using CafeAPI.Interfaces.IServices;
 using CafeAPI.Models.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Task = DocumentFormat.OpenXml.Office2021.DocumentTasks.Task;
 
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin,Waiter")]
+    //[Authorize(Roles = "Admin,Waiter")]
     [ApiController]
     public class MenuController(IMenuService menuService) : ControllerBase
     {
@@ -64,6 +65,28 @@ namespace CafeAPI.Controllers
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        [HttpPost("{id}/image")]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file) // ← id, не idm
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Файл не выбран");
+    
+            var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            if (!Directory.Exists(uploadFolder))
+                Directory.CreateDirectory(uploadFolder);
+    
+            var fileName = $"{id}{Path.GetExtension(file.FileName)}"; 
+            var filePath = Path.Combine(uploadFolder, fileName);      
+    
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                await file.CopyToAsync(fileStream);
+    
+            var updateDto = new UpdateMenuItemDto { Image = fileName };
+            await menuService.UpdateItemMenu(id, updateDto);
+    
+            return Ok(new { ImageUrl = $"/images/{fileName}" });
         }
     }
 }

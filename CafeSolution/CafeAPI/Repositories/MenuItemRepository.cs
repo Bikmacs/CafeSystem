@@ -29,6 +29,8 @@ namespace CafeAPI.Repositories
         {
             return await _context.MenuItems
                 .Include(m => m.Category)
+                .Include(m => m.DishItems)
+                .ThenInclude(di => di.Ingredient)
                 .ToListAsync();
         }
 
@@ -42,8 +44,10 @@ namespace CafeAPI.Repositories
 
         public async Task<MenuItem?> GetMenuItemByIdAsync(int id)
         {
-            return await _context.MenuItems.
-                Include(m => m.Category)
+            return await _context.MenuItems
+                .Include(m => m.Category)
+                .Include(m => m.DishItems)           
+                .ThenInclude(di => di.Ingredient)     
                 .FirstOrDefaultAsync(m => m.MenuItemId == id);
         }
 

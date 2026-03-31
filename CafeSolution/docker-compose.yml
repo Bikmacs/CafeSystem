@@ -1,5 +1,5 @@
 services:
-#API
+  #API
   cafeapi:
     image: ${DOCKER_REGISTRY-}cafeapi
     build:
@@ -7,13 +7,14 @@ services:
       dockerfile: CafeAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=CafeDb;Database=cafeDb;User Id=sa;Password=Bikmacs_2025!;TrustServerCertificate=True;
     ports:
-      - "8080:8080" 
+      - "8080:8080"
     depends_on:
       - cafedb
-
-#DATABASE
+  
+  #DATABASE
   cafedb:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:

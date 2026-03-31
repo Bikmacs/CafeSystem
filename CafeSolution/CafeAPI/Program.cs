@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "JWT токен"
+        Description = "JWT пїЅпїЅпїЅпїЅпїЅ"
     });
 
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -109,7 +109,7 @@ if (!app.Environment.IsEnvironment("Testing"))
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<CafeDbContext>();
-        //dbContext.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 }
 
@@ -123,7 +123,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
