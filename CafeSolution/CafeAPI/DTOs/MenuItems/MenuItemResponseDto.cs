@@ -1,4 +1,6 @@
-﻿namespace CafeAPI.DTOs.MenuItems
+﻿using CafeAPI.DTOs.MenuItems.Dish;
+
+namespace CafeAPI.DTOs.MenuItems
 {
     public class MenuItemResponseDto
     {
@@ -8,5 +10,8 @@
         public decimal Price { get; set; } = decimal.Zero;
         public string Category { get; set; } = string.Empty;
         public bool Available { get; set; } = true;
+        public string? Image { get; set; }
+
+        public List<DishItemResponse> Ingredients { get; set; } = new();
     }
 }

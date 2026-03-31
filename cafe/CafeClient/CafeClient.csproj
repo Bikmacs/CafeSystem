@@ -25,13 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="pizza.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\DishPage\" />
+    <Folder Include="Resources\LoginPage\" />
   </ItemGroup>
 
 </Project>

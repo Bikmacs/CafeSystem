@@ -15,6 +15,8 @@ namespace CafeAPI.Models
         public int CategoryId { get; set; }
         public bool Available { get; set; } = true;
 
+        [MaxLength(255)] public string? Image { get; set; }
+
         public Category Category { get; set; } = null!;
 
         public ICollection<DishItems> DishItems { get; set; } = new List<DishItems>();

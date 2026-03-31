@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CafeClient.DTOs
+﻿namespace CafeClient.DTOs.Menu
 {
     public class MenuItemResponseDto
     {
@@ -12,7 +6,10 @@ namespace CafeClient.DTOs
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
-        public string Category { get; set; } = string.Empty; 
+        public string Category { get; set; } = string.Empty;
         public bool Available { get; set; }
+        public string? Image { get; set; }
+
+        public List<DishItemResponse> Ingredients { get; set; } = new();
     }
 }

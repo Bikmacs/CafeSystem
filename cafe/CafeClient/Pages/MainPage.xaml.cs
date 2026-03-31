@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
+using CafeClient.DTOs.Menu;
 
 namespace CafeClient.Pages
 {
@@ -265,6 +266,13 @@ namespace CafeClient.Pages
         {
             if (HistoryListView.SelectedItem is not OrderResponseDto selectedOrder) return;
             NavigationService?.Navigate(new OrderDetailsPage(selectedOrder.OrderId, selectedOrder, _apiService));
+        }
+
+        private void MenuListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(MenuListView.SelectedItem is not MenuItemResponseDto selectedItem) return;
+
+            NavigationService?.Navigate(new DishPage(selectedItem));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

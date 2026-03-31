@@ -6,7 +6,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       Title="Управление меню"
-      d:DesignWidth="1366" d:DesignHeight="768">
+      d:DesignWidth="1366" d:DesignHeight="768" 
+      Background="White">
 
     <Grid>
         <Grid.ColumnDefinitions>

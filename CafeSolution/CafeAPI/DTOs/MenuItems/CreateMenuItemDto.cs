@@ -7,5 +7,6 @@
         public decimal Price { get; set; } = decimal.Zero;
         public int CategoryId { get; set; }
         public bool Available { get; set; } = true;
+        public string? Image { get; set; }
     }
 }

@@ -38,7 +38,7 @@
             <Button Grid.Column="1" Height="40" Margin="5" Content="Создать заказ" Click="CreateOrder_Click"/>
             <Button Grid.Column="2" Height="40" Margin="5" Content="Обновить" Click="RefreshButton_Click"/>
 
-            <ComboBox Grid.Column="3" Width="150" Height="40" Margin="5" VerticalContentAlignment="Center" HorizontalAlignment="Stretch">
+            <ComboBox Grid.Column="3" materialDesign:ColorZoneAssist.Background="LightSeaGreen" Width="150" Height="40" Margin="5" VerticalContentAlignment="Center" HorizontalAlignment="Stretch">
                 <ComboBoxItem IsEnabled="False" Content="Выберите действие"/>
                 <ComboBoxItem>
                     <Button x:Name="ButtonMenu" Content="Управление меню" 
@@ -61,9 +61,8 @@
 
             <TabControl Style="{StaticResource MaterialDesignTabControl}">
 
-                <TabItem Header="Активные" FontSize="16" FontWeight="SemiBold">
+                <TabItem Header="Активные" FontSize="14" FontWeight="SemiBold">
                     <ListView x:Name="OrdersListView"
-                              BorderThickness="0"
                               Background="Transparent"
                               MouseDoubleClick="OrdersListView_MouseDoubleClick"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -163,6 +162,7 @@
                 <ListView Grid.Row="2" x:Name="MenuListView" BorderThickness="0" 
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                   ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                  MouseDoubleClick="MenuListView_MouseDoubleClick"
                   HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>
                         <DataTemplate>

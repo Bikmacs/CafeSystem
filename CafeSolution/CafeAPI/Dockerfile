@@ -20,8 +20,13 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./CafeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Финальный этап - создание исполняемого образа
+#  создание исполняемого образа
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+USER root
+RUN mkdir -p /app/wwwroot/images && chown -R $APP_UID /app/wwwroot
+USER $APP_UID
+
 ENTRYPOINT ["dotnet", "CafeAPI.dll"]
