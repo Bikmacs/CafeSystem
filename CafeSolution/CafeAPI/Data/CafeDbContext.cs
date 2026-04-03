@@ -14,12 +14,12 @@ namespace CafeAPI.Data
         public DbSet<MenuItem> MenuItems { get; set; } = null!;
         public DbSet<DishItems> DishItems { get; set; } = null!;
         public DbSet<Indigriend> Indigriend { get; set; } = null!;
+        public DbSet<Tag> Tag { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка типов данных
             modelBuilder.Entity<DishItems>()
                 .Property(d => d.Amount)
                 .HasColumnType("decimal(18,2)");
@@ -28,21 +28,33 @@ namespace CafeAPI.Data
                 .Property(i => i.StockQuantity)
                 .HasColumnType("decimal(18,2)");
 
-            // 1. Посев ролей
             modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = 1, Name = "Admin" },
                 new Role { RoleId = 2, Name = "Waiter" },
                 new Role { RoleId = 3, Name = "Cook" }
             );
 
-            // 2. Посев пользователей
             modelBuilder.Entity<User>().HasData(
-                new User { UserId = 1, FullName = "Admin", Login = "admin", PasswordHash = "$2a$12$.gijsKvNhylDhZfxAknuDesvmZnx13DhA2NVKk9LZH32YiRAQM8YW", RoleId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new User { UserId = 2, FullName = "Waiter", Login = "waiter", PasswordHash = "$2a$12$C2Ek4ejvfw.so/k2AezYpuflw5YAaQ4vmHqU0xq0Gmz85Z.I3bSyG", RoleId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new User { UserId = 3, FullName = "Cook", Login = "cook", PasswordHash = "$2a$12$9iwlfcfL1S1uYa7BLe3xZO03pZ7mOTQzZDDGWOP7h/Xq4GaCSNBCm", RoleId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+                new User
+                {
+                    UserId = 1, FullName = "Admin", Login = "admin",
+                    PasswordHash = "$2a$12$.gijsKvNhylDhZfxAknuDesvmZnx13DhA2NVKk9LZH32YiRAQM8YW", RoleId = 1,
+                    CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new User
+                {
+                    UserId = 2, FullName = "Waiter", Login = "waiter",
+                    PasswordHash = "$2a$12$C2Ek4ejvfw.so/k2AezYpuflw5YAaQ4vmHqU0xq0Gmz85Z.I3bSyG", RoleId = 2,
+                    CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new User
+                {
+                    UserId = 3, FullName = "Cook", Login = "cook",
+                    PasswordHash = "$2a$12$9iwlfcfL1S1uYa7BLe3xZO03pZ7mOTQzZDDGWOP7h/Xq4GaCSNBCm", RoleId = 3,
+                    CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
             );
 
-            // 3. Посев категорий
             modelBuilder.Entity<Category>().HasData(
                 new Category { CategoryId = 1, Name = "Супы" },
                 new Category { CategoryId = 2, Name = "Салаты" },
@@ -55,173 +67,493 @@ namespace CafeAPI.Data
                 new Category { CategoryId = 9, Name = "Гарниры" },
                 new Category { CategoryId = 10, Name = "Соусы" }
             );
-
-            // 4. Посев MenuItem
-            modelBuilder.Entity<MenuItem>().HasData(
-                new MenuItem { MenuItemId = 1, Name = "Борщ", Description = "Классический украинский борщ с мясом, свеклой и сметаной", Price = 450, CategoryId = 1, Available = true },
-                new MenuItem { MenuItemId = 2, Name = "Куриный суп с лапшой", Description = "Лёгкий куриный бульон с домашней лапшой", Price = 350, CategoryId = 1, Available = true },
-                new MenuItem { MenuItemId = 3, Name = "Грибной крем-суп", Description = "Нежный суп-пюре из лесных грибов с гренками", Price = 420, CategoryId = 1, Available = true },
-                new MenuItem { MenuItemId = 4, Name = "Цезарь с курицей", Description = "Салат с курицей, сыром пармезан и сухариками", Price = 480, CategoryId = 2, Available = true },
-                new MenuItem { MenuItemId = 5, Name = "Греческий салат", Description = "Огурцы, помидоры, фета, оливки, красный лук", Price = 450, CategoryId = 2, Available = true },
-                new MenuItem { MenuItemId = 6, Name = "Витаминный салат", Description = "Микс свежих овощей с оливковым маслом", Price = 400, CategoryId = 2, Available = true },
-                new MenuItem { MenuItemId = 7, Name = "Брускетта с томатами", Description = "Хрустящий хлеб с томатами, базиликом и оливковым маслом", Price = 350, CategoryId = 3, Available = true },
-                new MenuItem { MenuItemId = 8, Name = "Карпаччо из говядины", Description = "Тонко нарезанная говядина с лимонным соусом", Price = 700, CategoryId = 3, Available = true },
-                new MenuItem { MenuItemId = 9, Name = "Моцарелла с томатами", Description = "Сыр моцарелла с томатами и базиликом", Price = 400, CategoryId = 3, Available = true },
-                new MenuItem { MenuItemId = 10, Name = "Стейк рибай", Description = "Сочный говяжий стейк, прожарка по желанию", Price = 1500, CategoryId = 4, Available = true },
-                new MenuItem { MenuItemId = 11, Name = "Курица гриль", Description = "Куриное филе на гриле с пряными травами", Price = 950, CategoryId = 4, Available = true },
-                new MenuItem { MenuItemId = 12, Name = "Свинина в соусе барбекю", Description = "Мясо свинины с соусом BBQ и овощами", Price = 1050, CategoryId = 4, Available = true },
-                new MenuItem { MenuItemId = 13, Name = "Маргарита", Description = "Томатный соус, сыр моцарелла, базилик", Price = 650, CategoryId = 5, Available = true },
-                new MenuItem { MenuItemId = 14, Name = "Пепперони", Description = "Пицца с пепперони и сыром моцарелла", Price = 750, CategoryId = 5, Available = true },
-                new MenuItem { MenuItemId = 15, Name = "Четыре сыра", Description = "Моцарелла, горгонзола, пармезан, чеддер", Price = 850, CategoryId = 5, Available = true },
-                new MenuItem { MenuItemId = 16, Name = "Спагетти Болоньезе", Description = "Спагетти с мясным соусом и пармезаном", Price = 700, CategoryId = 6, Available = true },
-                new MenuItem { MenuItemId = 17, Name = "Феттучини Альфредо", Description = "Паста с кремовым соусом и сыром", Price = 650, CategoryId = 6, Available = true },
-                new MenuItem { MenuItemId = 18, Name = "Паста с морепродуктами", Description = "Паста с креветками, кальмарами и чесночным соусом", Price = 950, CategoryId = 6, Available = true },
-                new MenuItem { MenuItemId = 19, Name = "Тирамису", Description = "Классический итальянский десерт с маскарпоне и кофе", Price = 400, CategoryId = 7, Available = true },
-                new MenuItem { MenuItemId = 20, Name = "Шоколадный фондан", Description = "Тёплый шоколадный кекс с жидкой начинкой", Price = 420, CategoryId = 7, Available = true },
-                new MenuItem { MenuItemId = 21, Name = "Чизкейк Нью-Йорк", Description = "Классический чизкейк с клубничным соусом", Price = 450, CategoryId = 7, Available = true },
-                new MenuItem { MenuItemId = 22, Name = "Капучино", Description = "Эспрессо с горячим молоком и пенкой", Price = 250, CategoryId = 8, Available = true },
-                new MenuItem { MenuItemId = 23, Name = "Чай черный", Description = "Классический черный чай", Price = 150, CategoryId = 8, Available = true },
-                new MenuItem { MenuItemId = 24, Name = "Сок апельсиновый", Description = "Свежевжатый апельсиновый сок", Price = 200, CategoryId = 8, Available = true },
-                new MenuItem { MenuItemId = 25, Name = "Картофель фри", Description = "Хрустящий картофель фри", Price = 250, CategoryId = 9, Available = true },
-                new MenuItem { MenuItemId = 26, Name = "Рис с овощами", Description = "Отварной рис с овощами", Price = 220, CategoryId = 9, Available = true },
-                new MenuItem { MenuItemId = 27, Name = "Овощи на пару", Description = "Сезонные овощи на пару", Price = 230, CategoryId = 9, Available = true },
-                new MenuItem { MenuItemId = 28, Name = "Соус BBQ", Description = "Сладко-пряный соус для мяса", Price = 100, CategoryId = 10, Available = true },
-                new MenuItem { MenuItemId = 29, Name = "Томатный соус", Description = "Соус из томатов для пиццы и пасты", Price = 90, CategoryId = 10, Available = true },
-                new MenuItem { MenuItemId = 30, Name = "Сметанный соус", Description = "Нежный соус со сметаной и зеленью", Price = 80, CategoryId = 10, Available = true }
-            );
-
-            // 5. Генерация случайных заказов (Логика)
-            var menuPrices = new Dictionary<int, decimal> { {1, 450}, {2, 350}, {3, 420}, {4, 480}, {5, 450}, {6, 400}, {7, 350}, {8, 700}, {9, 400}, {10, 1500}, {11, 950}, {12, 1050}, {13, 650}, {14, 750}, {15, 850}, {16, 700}, {17, 650}, {18, 950}, {19, 400}, {20, 420}, {21, 450}, {22, 250}, {23, 150}, {24, 200}, {25, 250}, {26, 220}, {27, 230}, {28, 100}, {29, 90}, {30, 80} };
-            var initialOrders = new List<Order>();
-            var initialOrderItems = new List<OrderItem>();
-            var random = new Random(123);
-            int orderItemIdCounter = 1;
-
-            for (int i = 1; i <= 100; i++)
             {
-                var baseDate = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc);
-                var orderDate = baseDate.AddDays(random.Next(0, 25)).AddHours(random.Next(8, 22));
-                initialOrders.Add(new Order { OrderId = i, UserId = 2, TableNumber = random.Next(1, 41), Status = "Оплачен", CreatedAt = orderDate });
+                modelBuilder.Entity<Tag>().HasData(
+                    new Tag { TagId = 1, TagName = "Острое" },
+                    new Tag { TagId = 2, TagName = "Вегетарианское" },
+                    new Tag { TagId = 3, TagName = "Мясо" },
+                    new Tag { TagId = 4, TagName = "Новинка" },
+                    new Tag { TagId = 5, TagName = "Постное" }
+                );
 
-                int itemsCount = random.Next(1, 4);
-                var usedMenuIds = new HashSet<int>();
-                for (int j = 0; j < itemsCount; j++)
+                modelBuilder.Entity<MenuItem>().HasData(
+                    new MenuItem
+                    {
+                        MenuItemId = 1, Name = "Борщ",
+                        Description = "Классический украинский борщ с мясом, свеклой и сметаной", Price = 450,
+                        CategoryId = 1, Available = false
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 2, Name = "Куриный суп с лапшой",
+                        Description = "Лёгкий куриный бульон с домашней лапшой", Price = 350, CategoryId = 1,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 3, Name = "Грибной крем-суп",
+                        Description = "Нежный суп-пюре из лесных грибов с гренками", Price = 420, CategoryId = 1,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 4, Name = "Цезарь с курицей",
+                        Description = "Салат с курицей, сыром пармезан и сухариками", Price = 480, CategoryId = 2,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 5, Name = "Греческий салат",
+                        Description = "Огурцы, помидоры, фета, оливки, красный лук", Price = 450, CategoryId = 2,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 6, Name = "Витаминный салат",
+                        Description = "Микс свежих овощей с оливковым маслом", Price = 400, CategoryId = 2,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 7, Name = "Брускетта с томатами",
+                        Description = "Хрустящий хлеб с томатами, базиликом и оливковым маслом", Price = 350,
+                        CategoryId = 3, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 8, Name = "Карпаччо из говядины",
+                        Description = "Тонко нарезанная говядина с лимонным соусом", Price = 700, CategoryId = 3,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 9, Name = "Моцарелла с томатами",
+                        Description = "Сыр моцарелла с томатами и базиликом", Price = 400, CategoryId = 3,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 10, Name = "Стейк рибай",
+                        Description = "Сочный говяжий стейк, прожарка по желанию", Price = 1500, CategoryId = 4,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 11, Name = "Курица гриль", Description = "Куриное филе на гриле с пряными травами",
+                        Price = 950, CategoryId = 4, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 12, Name = "Свинина в соусе барбекю",
+                        Description = "Мясо свинины с соусом BBQ и овощами", Price = 1050, CategoryId = 4,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 13, Name = "Маргарита", Description = "Томатный соус, сыр моцарелла, базилик",
+                        Price = 650, CategoryId = 5, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 14, Name = "Пепперони", Description = "Пицца с пепперони и сыром моцарелла",
+                        Price = 750, CategoryId = 5, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 15, Name = "Четыре сыра", Description = "Моцарелла, горгонзола, пармезан, чеддер",
+                        Price = 850, CategoryId = 5, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 16, Name = "Спагетти Болоньезе",
+                        Description = "Спагетти с мясным соусом и пармезаном", Price = 700, CategoryId = 6,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 17, Name = "Феттучини Альфредо", Description = "Паста с кремовым соусом и сыром",
+                        Price = 650, CategoryId = 6, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 18, Name = "Паста с морепродуктами",
+                        Description = "Паста с креветками, кальмарами и чесночным соусом", Price = 950, CategoryId = 6,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 19, Name = "Тирамису",
+                        Description = "Классический итальянский десерт с маскарпоне и кофе", Price = 400,
+                        CategoryId = 7, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 20, Name = "Шоколадный фондан",
+                        Description = "Тёплый шоколадный кекс с жидкой начинкой", Price = 420, CategoryId = 7,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 21, Name = "Чизкейк Нью-Йорк",
+                        Description = "Классический чизкейк с клубничным соусом", Price = 450, CategoryId = 7,
+                        Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 22, Name = "Капучино", Description = "Эспрессо с горячим молоком и пенкой",
+                        Price = 250, CategoryId = 8, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 23, Name = "Чай черный", Description = "Классический черный чай", Price = 150,
+                        CategoryId = 8, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 24, Name = "Сок апельсиновый", Description = "Свежевжатый апельсиновый сок",
+                        Price = 200, CategoryId = 8, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 25, Name = "Картофель фри", Description = "Хрустящий картофель фри", Price = 250,
+                        CategoryId = 9, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 26, Name = "Рис с овощами", Description = "Отварной рис с овощами", Price = 220,
+                        CategoryId = 9, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 27, Name = "Овощи на пару", Description = "Сезонные овощи на пару", Price = 230,
+                        CategoryId = 9, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 28, Name = "Соус BBQ", Description = "Сладко-пряный соус для мяса", Price = 100,
+                        CategoryId = 10, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 29, Name = "Томатный соус", Description = "Соус из томатов для пиццы и пасты",
+                        Price = 90, CategoryId = 10, Available = true
+                    },
+                    new MenuItem
+                    {
+                        MenuItemId = 30, Name = "Сметанный соус", Description = "Нежный соус со сметаной и зеленью",
+                        Price = 80, CategoryId = 10, Available = true
+                    }
+                );
+
+                modelBuilder.Entity("MenuItemTag").HasData(
+                    // Супы
+                    new { MenuItemsMenuItemId = 1, TagsTagId = 3 }, // Борщ -> Мясо
+                    new { MenuItemsMenuItemId = 2, TagsTagId = 3 }, // Куриный суп -> Мясо
+                    new { MenuItemsMenuItemId = 3, TagsTagId = 2 }, // Грибной суп -> Вегетарианское
+
+                    // Салаты
+                    new { MenuItemsMenuItemId = 4, TagsTagId = 3 }, // Цезарь -> Мясо
+                    new { MenuItemsMenuItemId = 5, TagsTagId = 2 }, // Греческий -> Вегетарианское
+                    new { MenuItemsMenuItemId = 6, TagsTagId = 2 }, // Витаминный -> Вегетарианское
+                    new { MenuItemsMenuItemId = 6, TagsTagId = 5 }, // Витаминный -> Постное
+
+                    // Закуски
+                    new { MenuItemsMenuItemId = 7, TagsTagId = 2 }, // Брускетта -> Вегетарианское
+                    new { MenuItemsMenuItemId = 8, TagsTagId = 3 }, // Карпаччо -> Мясо
+                    new { MenuItemsMenuItemId = 9, TagsTagId = 2 }, // Моцарелла -> Вегетарианское
+
+                    // Основные блюда
+                    new { MenuItemsMenuItemId = 10, TagsTagId = 3 }, // Стейк -> Мясо
+                    new { MenuItemsMenuItemId = 10, TagsTagId = 4 }, // Стейк -> Новинка
+                    new { MenuItemsMenuItemId = 11, TagsTagId = 3 }, // Курица гриль -> Мясо
+                    new { MenuItemsMenuItemId = 12, TagsTagId = 3 }, // Свинина BBQ -> Мясо
+
+                    // Пицца
+                    new { MenuItemsMenuItemId = 13, TagsTagId = 2 }, // Маргарита -> Вегетарианское
+                    new { MenuItemsMenuItemId = 14, TagsTagId = 1 }, // Пепперони -> Острое
+                    new { MenuItemsMenuItemId = 14, TagsTagId = 3 }, // Пепперони -> Мясо
+                    new { MenuItemsMenuItemId = 15, TagsTagId = 2 }, // Четыре сыра -> Вегетарианское
+
+                    // Паста
+                    new { MenuItemsMenuItemId = 16, TagsTagId = 3 }, // Болоньезе -> Мясо
+                    new { MenuItemsMenuItemId = 17, TagsTagId = 2 }, // Альфредо -> Вегетарианское
+                    new { MenuItemsMenuItemId = 18, TagsTagId = 4 }, // Паста с морепродуктами -> Новинка
+
+                    // Десерты
+                    new { MenuItemsMenuItemId = 19, TagsTagId = 2 }, // Тирамису -> Вегетарианское
+                    new { MenuItemsMenuItemId = 20, TagsTagId = 2 }, // Фондан -> Вегетарианское
+                    new { MenuItemsMenuItemId = 21, TagsTagId = 2 }, // Чизкейк -> Вегетарианское
+
+                    // Напитки и гарниры
+                    new { MenuItemsMenuItemId = 25, TagsTagId = 2 }, // Фри -> Вегетарианское
+                    new { MenuItemsMenuItemId = 25, TagsTagId = 5 }, // Фри -> Постное
+                    new { MenuItemsMenuItemId = 26, TagsTagId = 2 }, // Рис -> Вегетарианское
+                    new { MenuItemsMenuItemId = 26, TagsTagId = 5 }, // Рис -> Постное
+                    new { MenuItemsMenuItemId = 27, TagsTagId = 2 }, // Овощи на пару -> Вегетарианское
+                    new { MenuItemsMenuItemId = 27, TagsTagId = 5 }, // Овощи на пару -> Постное
+
+                    // Соусы
+                    new { MenuItemsMenuItemId = 28, TagsTagId = 1 } // Соус BBQ -> Острое (условно)
+                );
+
+
+                var menuPrices = new Dictionary<int, decimal>
                 {
-                    int menuId;
-                    do { menuId = random.Next(1, 31); } while (usedMenuIds.Contains(menuId));
-                    usedMenuIds.Add(menuId);
-                    initialOrderItems.Add(new OrderItem { OrderItemId = orderItemIdCounter++, OrderId = i, MenuItemId = menuId, Quantity = random.Next(1, 4), UnitPrice = menuPrices[menuId] });
+                    { 1, 450 }, { 2, 350 }, { 3, 420 }, { 4, 480 }, { 5, 450 }, { 6, 400 }, { 7, 350 }, { 8, 700 },
+                    { 9, 400 }, { 10, 1500 }, { 11, 950 }, { 12, 1050 }, { 13, 650 }, { 14, 750 }, { 15, 850 },
+                    { 16, 700 }, { 17, 650 }, { 18, 950 }, { 19, 400 }, { 20, 420 }, { 21, 450 }, { 22, 250 },
+                    { 23, 150 }, { 24, 200 }, { 25, 250 }, { 26, 220 }, { 27, 230 }, { 28, 100 }, { 29, 90 }, { 30, 80 }
+                };
+                var initialOrders = new List<Order>();
+                var initialOrderItems = new List<OrderItem>();
+                var random = new Random(123);
+                var orderItemIdCounter = 1;
+
+                for (var i = 1; i <= 100; i++)
+                {
+                    var baseDate = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+                    var orderDate = baseDate.AddDays(random.Next(0, 25)).AddHours(random.Next(8, 22));
+                    initialOrders.Add(new Order
+                    {
+                        OrderId = i, UserId = 2, TableNumber = random.Next(1, 41), Status = "Оплачен",
+                        CreatedAt = orderDate
+                    });
+
+                    var itemsCount = random.Next(1, 4);
+                    var usedMenuIds = new HashSet<int>();
+                    for (int j = 0; j < itemsCount; j++)
+                    {
+                        int menuId;
+                        do
+                        {
+                            menuId = random.Next(1, 31);
+                        } while (usedMenuIds.Contains(menuId));
+
+                        usedMenuIds.Add(menuId);
+                        initialOrderItems.Add(new OrderItem
+                        {
+                            OrderItemId = orderItemIdCounter++, OrderId = i, MenuItemId = menuId,
+                            Quantity = random.Next(1, 4), UnitPrice = menuPrices[menuId]
+                        });
+                    }
                 }
+
+                modelBuilder.Entity<Order>().HasData(initialOrders);
+                modelBuilder.Entity<OrderItem>().HasData(initialOrderItems);
+
+                modelBuilder.Entity<Indigriend>().HasData(
+                    new Indigriend { Id = 1, Name = "Говядина" }, new Indigriend { Id = 2, Name = "Свинина" },
+                    new Indigriend { Id = 3, Name = "Курица" }, new Indigriend { Id = 4, Name = "Индейка" },
+                    new Indigriend { Id = 5, Name = "Фарш" }, new Indigriend { Id = 6, Name = "Молоко" },
+                    new Indigriend { Id = 7, Name = "Сметана" }, new Indigriend { Id = 8, Name = "Творог" },
+                    new Indigriend { Id = 9, Name = "Сыр" }, new Indigriend { Id = 10, Name = "СливочноеМасло" },
+                    new Indigriend { Id = 11, Name = "Мука" }, new Indigriend { Id = 12, Name = "Сахар" },
+                    new Indigriend { Id = 13, Name = "Соль" }, new Indigriend { Id = 14, Name = "ПодсолнечноеМасло" },
+                    new Indigriend { Id = 15, Name = "Рис" }, new Indigriend { Id = 16, Name = "Гречка" },
+                    new Indigriend { Id = 17, Name = "МакаронныеИзделия" },
+                    new Indigriend { Id = 18, Name = "Картофель" }, new Indigriend { Id = 19, Name = "ЛукРепчатый" },
+                    new Indigriend { Id = 20, Name = "Морковь" }, new Indigriend { Id = 21, Name = "Капуста" },
+                    new Indigriend { Id = 22, Name = "Свекла" }, new Indigriend { Id = 23, Name = "ХлебПшеничный" },
+                    new Indigriend { Id = 24, Name = "ХлебРжаной" }, new Indigriend { Id = 25, Name = "Батон" }
+                );
+
+                modelBuilder.Entity<DishItems>().HasData(
+                    new DishItems
+                        { Id = 1, MenuItemId = 1, IngredientId = 1, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 2, MenuItemId = 1, IngredientId = 22, Amount = 80m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 3, MenuItemId = 1, IngredientId = 21, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 4, MenuItemId = 1, IngredientId = 18, Amount = 100m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 5, MenuItemId = 1, IngredientId = 7, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 6, MenuItemId = 1, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 7, MenuItemId = 2, IngredientId = 3, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 8, MenuItemId = 2, IngredientId = 17, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 9, MenuItemId = 2, IngredientId = 20, Amount = 40m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 10, MenuItemId = 2, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 11, MenuItemId = 3, IngredientId = 18, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 12, MenuItemId = 3, IngredientId = 6, Amount = 0.15m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 13, MenuItemId = 3, IngredientId = 10, Amount = 20m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 14, MenuItemId = 3, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 15, MenuItemId = 4, IngredientId = 3, Amount = 120m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 16, MenuItemId = 4, IngredientId = 9, Amount = 40m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 17, MenuItemId = 4, IngredientId = 21, Amount = 100m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 18, MenuItemId = 4, IngredientId = 25, Amount = 0.5m, UnitType = UnitTypes.штук },
+                    new DishItems
+                        { Id = 19, MenuItemId = 5, IngredientId = 9, Amount = 80m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 20, MenuItemId = 5, IngredientId = 19, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 21, MenuItemId = 5, IngredientId = 14, Amount = 0.03m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 22, MenuItemId = 5, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 23, MenuItemId = 6, IngredientId = 21, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 24, MenuItemId = 6, IngredientId = 20, Amount = 80m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 25, MenuItemId = 6, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 26, MenuItemId = 7, IngredientId = 25, Amount = 0.2m, UnitType = UnitTypes.штук },
+                    new DishItems
+                        { Id = 27, MenuItemId = 7, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 28, MenuItemId = 7, IngredientId = 14, Amount = 0.01m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 29, MenuItemId = 8, IngredientId = 1, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 30, MenuItemId = 8, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 31, MenuItemId = 8, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 32, MenuItemId = 8, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 33, MenuItemId = 9, IngredientId = 9, Amount = 120m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 34, MenuItemId = 9, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 35, MenuItemId = 10, IngredientId = 1, Amount = 300m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 36, MenuItemId = 10, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 37, MenuItemId = 10, IngredientId = 13, Amount = 6m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 38, MenuItemId = 11, IngredientId = 3, Amount = 250m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 39, MenuItemId = 11, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 40, MenuItemId = 11, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 41, MenuItemId = 12, IngredientId = 2, Amount = 250m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 42, MenuItemId = 12, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 43, MenuItemId = 12, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 44, MenuItemId = 13, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 45, MenuItemId = 13, IngredientId = 9, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 46, MenuItemId = 13, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 47, MenuItemId = 13, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 48, MenuItemId = 14, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 49, MenuItemId = 14, IngredientId = 9, Amount = 100m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 50, MenuItemId = 14, IngredientId = 2, Amount = 80m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 51, MenuItemId = 14, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 52, MenuItemId = 15, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 53, MenuItemId = 15, IngredientId = 9, Amount = 250m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 54, MenuItemId = 15, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 55, MenuItemId = 16, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 56, MenuItemId = 16, IngredientId = 5, Amount = 120m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 57, MenuItemId = 16, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 58, MenuItemId = 16, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 59, MenuItemId = 17, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 60, MenuItemId = 17, IngredientId = 10, Amount = 40m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 61, MenuItemId = 17, IngredientId = 9, Amount = 60m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 62, MenuItemId = 17, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 63, MenuItemId = 18, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 64, MenuItemId = 18, IngredientId = 10, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 65, MenuItemId = 18, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 66, MenuItemId = 18, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 67, MenuItemId = 19, IngredientId = 8, Amount = 120m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 68, MenuItemId = 19, IngredientId = 12, Amount = 40m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 69, MenuItemId = 19, IngredientId = 6, Amount = 0.05m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 70, MenuItemId = 20, IngredientId = 11, Amount = 60m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 71, MenuItemId = 20, IngredientId = 10, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 72, MenuItemId = 20, IngredientId = 12, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 73, MenuItemId = 21, IngredientId = 8, Amount = 200m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 74, MenuItemId = 21, IngredientId = 11, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 75, MenuItemId = 21, IngredientId = 12, Amount = 60m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 76, MenuItemId = 21, IngredientId = 10, Amount = 40m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 77, MenuItemId = 22, IngredientId = 6, Amount = 0.2m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 78, MenuItemId = 22, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 79, MenuItemId = 23, IngredientId = 12, Amount = 15m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 80, MenuItemId = 24, IngredientId = 12, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 81, MenuItemId = 25, IngredientId = 18, Amount = 250m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 82, MenuItemId = 25, IngredientId = 14, Amount = 0.1m, UnitType = UnitTypes.литр },
+                    new DishItems
+                        { Id = 83, MenuItemId = 25, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 84, MenuItemId = 26, IngredientId = 15, Amount = 150m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 85, MenuItemId = 26, IngredientId = 20, Amount = 50m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 86, MenuItemId = 26, IngredientId = 19, Amount = 30m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 87, MenuItemId = 26, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 88, MenuItemId = 27, IngredientId = 21, Amount = 100m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 89, MenuItemId = 27, IngredientId = 20, Amount = 60m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 90, MenuItemId = 27, IngredientId = 22, Amount = 60m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 91, MenuItemId = 27, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 92, MenuItemId = 28, IngredientId = 12, Amount = 15m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 93, MenuItemId = 28, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 94, MenuItemId = 29, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 95, MenuItemId = 29, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 96, MenuItemId = 30, IngredientId = 7, Amount = 80m, UnitType = UnitTypes.грамм },
+                    new DishItems
+                        { Id = 97, MenuItemId = 30, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм }
+                );
             }
-
-            modelBuilder.Entity<Order>().HasData(initialOrders);
-            modelBuilder.Entity<OrderItem>().HasData(initialOrderItems);
-
-            // 6. Посев ингредиентов
-            modelBuilder.Entity<Indigriend>().HasData(
-                new Indigriend { Id = 1, Name = "Говядина" }, new Indigriend { Id = 2, Name = "Свинина" }, new Indigriend { Id = 3, Name = "Курица" }, new Indigriend { Id = 4, Name = "Индейка" }, new Indigriend { Id = 5, Name = "Фарш" }, new Indigriend { Id = 6, Name = "Молоко" }, new Indigriend { Id = 7, Name = "Сметана" }, new Indigriend { Id = 8, Name = "Творог" }, new Indigriend { Id = 9, Name = "Сыр" }, new Indigriend { Id = 10, Name = "СливочноеМасло" }, new Indigriend { Id = 11, Name = "Мука" }, new Indigriend { Id = 12, Name = "Сахар" }, new Indigriend { Id = 13, Name = "Соль" }, new Indigriend { Id = 14, Name = "ПодсолнечноеМасло" }, new Indigriend { Id = 15, Name = "Рис" }, new Indigriend { Id = 16, Name = "Гречка" }, new Indigriend { Id = 17, Name = "МакаронныеИзделия" }, new Indigriend { Id = 18, Name = "Картофель" }, new Indigriend { Id = 19, Name = "ЛукРепчатый" }, new Indigriend { Id = 20, Name = "Морковь" }, new Indigriend { Id = 21, Name = "Капуста" }, new Indigriend { Id = 22, Name = "Свекла" }, new Indigriend { Id = 23, Name = "ХлебПшеничный" }, new Indigriend { Id = 24, Name = "ХлебРжаной" }, new Indigriend { Id = 25, Name = "Батон" }
-            );
-
-            // 7. Посев DishItems (Состав блюд)
-            modelBuilder.Entity<DishItems>().HasData(
-                new DishItems { Id = 1, MenuItemId = 1, IngredientId = 1, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 2, MenuItemId = 1, IngredientId = 22, Amount = 80m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 3, MenuItemId = 1, IngredientId = 21, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 4, MenuItemId = 1, IngredientId = 18, Amount = 100m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 5, MenuItemId = 1, IngredientId = 7, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 6, MenuItemId = 1, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 7, MenuItemId = 2, IngredientId = 3, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 8, MenuItemId = 2, IngredientId = 17, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 9, MenuItemId = 2, IngredientId = 20, Amount = 40m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 10, MenuItemId = 2, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 11, MenuItemId = 3, IngredientId = 18, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 12, MenuItemId = 3, IngredientId = 6, Amount = 0.15m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 13, MenuItemId = 3, IngredientId = 10, Amount = 20m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 14, MenuItemId = 3, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 15, MenuItemId = 4, IngredientId = 3, Amount = 120m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 16, MenuItemId = 4, IngredientId = 9, Amount = 40m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 17, MenuItemId = 4, IngredientId = 21, Amount = 100m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 18, MenuItemId = 4, IngredientId = 25, Amount = 0.5m, UnitType = UnitTypes.штук },
-                new DishItems { Id = 19, MenuItemId = 5, IngredientId = 9, Amount = 80m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 20, MenuItemId = 5, IngredientId = 19, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 21, MenuItemId = 5, IngredientId = 14, Amount = 0.03m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 22, MenuItemId = 5, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 23, MenuItemId = 6, IngredientId = 21, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 24, MenuItemId = 6, IngredientId = 20, Amount = 80m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 25, MenuItemId = 6, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 26, MenuItemId = 7, IngredientId = 25, Amount = 0.2m, UnitType = UnitTypes.штук },
-                new DishItems { Id = 27, MenuItemId = 7, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 28, MenuItemId = 7, IngredientId = 14, Amount = 0.01m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 29, MenuItemId = 8, IngredientId = 1, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 30, MenuItemId = 8, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 31, MenuItemId = 8, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 32, MenuItemId = 8, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 33, MenuItemId = 9, IngredientId = 9, Amount = 120m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 34, MenuItemId = 9, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 35, MenuItemId = 10, IngredientId = 1, Amount = 300m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 36, MenuItemId = 10, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 37, MenuItemId = 10, IngredientId = 13, Amount = 6m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 38, MenuItemId = 11, IngredientId = 3, Amount = 250m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 39, MenuItemId = 11, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 40, MenuItemId = 11, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 41, MenuItemId = 12, IngredientId = 2, Amount = 250m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 42, MenuItemId = 12, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 43, MenuItemId = 12, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 44, MenuItemId = 13, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 45, MenuItemId = 13, IngredientId = 9, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 46, MenuItemId = 13, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 47, MenuItemId = 13, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 48, MenuItemId = 14, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 49, MenuItemId = 14, IngredientId = 9, Amount = 100m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 50, MenuItemId = 14, IngredientId = 2, Amount = 80m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 51, MenuItemId = 14, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 52, MenuItemId = 15, IngredientId = 11, Amount = 200m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 53, MenuItemId = 15, IngredientId = 9, Amount = 250m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 54, MenuItemId = 15, IngredientId = 14, Amount = 0.02m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 55, MenuItemId = 16, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 56, MenuItemId = 16, IngredientId = 5, Amount = 120m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 57, MenuItemId = 16, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 58, MenuItemId = 16, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 59, MenuItemId = 17, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 60, MenuItemId = 17, IngredientId = 10, Amount = 40m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 61, MenuItemId = 17, IngredientId = 9, Amount = 60m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 62, MenuItemId = 17, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 63, MenuItemId = 18, IngredientId = 17, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 64, MenuItemId = 18, IngredientId = 10, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 65, MenuItemId = 18, IngredientId = 9, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 66, MenuItemId = 18, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 67, MenuItemId = 19, IngredientId = 8, Amount = 120m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 68, MenuItemId = 19, IngredientId = 12, Amount = 40m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 69, MenuItemId = 19, IngredientId = 6, Amount = 0.05m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 70, MenuItemId = 20, IngredientId = 11, Amount = 60m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 71, MenuItemId = 20, IngredientId = 10, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 72, MenuItemId = 20, IngredientId = 12, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 73, MenuItemId = 21, IngredientId = 8, Amount = 200m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 74, MenuItemId = 21, IngredientId = 11, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 75, MenuItemId = 21, IngredientId = 12, Amount = 60m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 76, MenuItemId = 21, IngredientId = 10, Amount = 40m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 77, MenuItemId = 22, IngredientId = 6, Amount = 0.2m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 78, MenuItemId = 22, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 79, MenuItemId = 23, IngredientId = 12, Amount = 15m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 80, MenuItemId = 24, IngredientId = 12, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 81, MenuItemId = 25, IngredientId = 18, Amount = 250m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 82, MenuItemId = 25, IngredientId = 14, Amount = 0.1m, UnitType = UnitTypes.литр },
-                new DishItems { Id = 83, MenuItemId = 25, IngredientId = 13, Amount = 5m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 84, MenuItemId = 26, IngredientId = 15, Amount = 150m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 85, MenuItemId = 26, IngredientId = 20, Amount = 50m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 86, MenuItemId = 26, IngredientId = 19, Amount = 30m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 87, MenuItemId = 26, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 88, MenuItemId = 27, IngredientId = 21, Amount = 100m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 89, MenuItemId = 27, IngredientId = 20, Amount = 60m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 90, MenuItemId = 27, IngredientId = 22, Amount = 60m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 91, MenuItemId = 27, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 92, MenuItemId = 28, IngredientId = 12, Amount = 15m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 93, MenuItemId = 28, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 94, MenuItemId = 29, IngredientId = 12, Amount = 10m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 95, MenuItemId = 29, IngredientId = 13, Amount = 4m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 96, MenuItemId = 30, IngredientId = 7, Amount = 80m, UnitType = UnitTypes.грамм },
-                new DishItems { Id = 97, MenuItemId = 30, IngredientId = 13, Amount = 3m, UnitType = UnitTypes.грамм }
-            );
         }
     }
 }

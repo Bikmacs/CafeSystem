@@ -1,38 +1,104 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using CafeClient.DTOs;
 using CafeClient.DTOs.Menu;
+using CafeClient.Services;
+using Microsoft.Win32;
 
-namespace CafeClient.Pages;
-
-public partial class DishPage : Page
+namespace CafeClient.Pages
 {
-    public DishPage(MenuItemResponseDto dish)
+    public partial class DishPage : Page
     {
-        InitializeComponent();
-        this.DataContext = dish;
-        
-        if (!string.IsNullOrEmpty(dish.Image))
-        {
-            try
-            {
-                DishImage.Source = new BitmapImage(
-                    new Uri($"http://localhost:8080/images/{dish.Image}")
-                );
-            }
-            catch
-            {
-                // ignored
-            } 
-        }
-    }
+        private readonly bool _isCookies;
+        private readonly ApiService _apiService;
+        private readonly MenuItemResponseDto _currentDish;
 
-    private void BackButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (NavigationService is { CanGoBack: true })
+        public DishPage(MenuItemResponseDto dish, bool isCookies, ApiService apiService)
         {
-            NavigationService.GoBack();
+            InitializeComponent();
+            _currentDish = dish;
+            _apiService = apiService;
+            _isCookies = isCookies;
+
+            this.DataContext = _currentDish;
+
+            if (!string.IsNullOrEmpty(_currentDish.Image))
+            {
+                try
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri($"http://localhost:8080/images/{_currentDish.Image}");
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    DishImage.Source = bitmap;
+                }
+                catch
+                {
+                    DishImage.Source = null;
+                }
+            }
+
+            UpdateImageVisibility();
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService != null && NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
+
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Images|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string localPath = openFileDialog.FileName;
+
+                try
+                {
+                    var newImageUrl = await _apiService.UploadMenuImageAsync(_currentDish.MenuItemId, localPath);
+
+                    if (!string.IsNullOrEmpty(newImageUrl))
+                    {
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(localPath);
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.EndInit();
+
+                        DishImage.Source = bitmap;
+                        _currentDish.Image = System.IO.Path.GetFileName(newImageUrl);
+
+                        MessageBox.Show("Изображение успешно обновлено!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}");
+                }
+                finally
+                {
+                    UpdateImageVisibility();
+                }
+            }
+        }
+
+        private void UpdateImageVisibility()
+        {
+            if (_isCookies && DishImage.Source == null)
+            {
+                ButtonImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ButtonImage.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

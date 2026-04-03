@@ -3,12 +3,10 @@ using CafeClient.DTOs.Category;
 using CafeClient.DTOs.Menu;
 using CafeClient.DTOs.Orders;
 using CafeClient.DTOs.User;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace CafeClient.Services
 {
@@ -17,6 +15,7 @@ namespace CafeClient.Services
         private readonly HttpClient _httpClient;
 
         #region Endpoints
+
         private static class Endpoints
         {
             public const string Login = "api/User/Login";
@@ -33,18 +32,23 @@ namespace CafeClient.Services
             public static string UpdateUser(int id, int role) => $"api/User/{id}/UpdateUser?Role={role}";
             public static string GetOrderById(int id) => $"api/Orders/{id}/GetOrderById";
             public static string UpdateOrderStatus(int id) => $"api/Orders/{id}/statusUpdate";
-            public static string DeleteOrderItem(int orderId, int itemId) => $"api/Orders/{orderId}/deleteItem?orderItemId={itemId}";
+
+            public static string DeleteOrderItem(int orderId, int itemId) =>
+                $"api/Orders/{orderId}/deleteItem?orderItemId={itemId}";
+
             public static string AddItemsToOrder(int orderId) => $"api/Orders/{orderId}/AddItemsToOrder";
             public static string DeleteOrder(int id) => $"api/Orders/{id}/DeleteOrder";
             public static string DeleteMenuItem(int id) => $"api/Menu/{id}/DeleteItem";
             public static string ExportRevenue(bool monthly) => $"api/Orders/ExportRevenue?isMonthly={monthly}";
+            public static string UploadMenuItemImage(int id) => $"api/Menu/{id}/image";
         }
+
         #endregion
 
         public ApiService()
         {
             var baseUrl = App.Configuration["Api:BaseUrl"]
-                ?? throw new InvalidOperationException("Api:BaseUrl не настроен в конфигурации.");
+                          ?? throw new InvalidOperationException("Api:BaseUrl не настроен в конфигурации.");
 
             _httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
         }
@@ -167,40 +171,40 @@ namespace CafeClient.Services
         private async Task<bool> PostAsync<T>(string url, T body)
         {
             return await SafeExecuteAsync(async () =>
-            {
-                var response = await _httpClient.PostAsJsonAsync(url, body);
-                return response.IsSuccessStatusCode;
-            }, $"POST {url}");
+                {
+                    var response = await _httpClient.PostAsJsonAsync(url, body);
+                    return response.IsSuccessStatusCode;
+                }, $"POST {url}");
         }
 
         private async Task<TResponse?> PostAndReadAsync<TRequest, TResponse>(string url, TRequest body)
         {
             LogRequest(url);
             return await SafeExecuteAsync(async () =>
-            {
-                var response = await _httpClient.PostAsJsonAsync(url, body);
-                return response.IsSuccessStatusCode
-                    ? await response.Content.ReadFromJsonAsync<TResponse>()
-                    : default;
-            }, $"POST {url}");
+                {
+                    var response = await _httpClient.PostAsJsonAsync(url, body);
+                    return response.IsSuccessStatusCode
+                        ? await response.Content.ReadFromJsonAsync<TResponse>()
+                        : default;
+                }, $"POST {url}");
         }
 
         private async Task<bool> PatchAsync<T>(string url, T body)
         {
             return await SafeExecuteAsync(async () =>
-            {
-                var response = await _httpClient.PatchAsJsonAsync(url, body);
-                return response.IsSuccessStatusCode;
-            }, $"PATCH {url}");
+                {
+                    var response = await _httpClient.PatchAsJsonAsync(url, body);
+                    return response.IsSuccessStatusCode;
+                }, $"PATCH {url}");
         }
 
         private async Task<bool> DeleteAsync(string url)
         {
             return await SafeExecuteAsync(async () =>
-            {
-                var response = await _httpClient.DeleteAsync(url);
-                return response.IsSuccessStatusCode;
-            }, $"DELETE {url}");
+                {
+                    var response = await _httpClient.DeleteAsync(url);
+                    return response.IsSuccessStatusCode;
+                }, $"DELETE {url}");
         }
 
         private static async Task<T?> SafeExecuteAsync<T>(Func<Task<T?>> action, string context)
@@ -214,6 +218,39 @@ namespace CafeClient.Services
                 Debug.WriteLine($"[ApiService] Ошибка [{context}]: {ex.Message}");
                 return default;
             }
+        }
+
+        public async Task<string?> UploadMenuImageAsync(int menuItemId, string filePath)
+        {
+            var url = Endpoints.UploadMenuItemImage(menuItemId);
+            LogRequest(url);
+
+            return await SafeExecuteAsync(async () =>
+            {
+                using var content = new MultipartFormDataContent();
+
+                var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                var streamContent = new StreamContent(fileStream);
+
+                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                content.Add(streamContent, "file", Path.GetFileName(filePath));
+
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ImageUploadResponse>();
+                    return result?.ImageUrl;
+                }
+
+                return null;
+            }, "ЗАГРУЗКА ИЗОБРАЖЕНИЯ");
+        }
+
+        public class ImageUploadResponse
+        {
+            public string ImageUrl { get; set; }
         }
 
         private void LogRequest(string endpoint)

@@ -34,7 +34,7 @@
             <Border Padding="15,10" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8">
                 <StackPanel>
                     <TextBlock Text="{Binding CurrentOrder.OrderId, StringFormat=ЗАКАЗ №{0}}" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
-                    <TextBlock Text="Клиент:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="Сотрудник:" Foreground="Gray" FontSize="12"/>
                     <TextBlock Text="{Binding CurrentOrder.UserName}" FontSize="18" Margin="0,0,0,10"/>
                     <TextBlock Text="Столик:" Foreground="Gray" FontSize="12"/>
                     <TextBlock Text="{Binding CurrentOrder.TableNumber}" FontSize="18" Margin="0,0,0,10"/>
@@ -45,10 +45,7 @@
                     <Separator Margin="0,15"/>
                     <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="Gray"/>
                     <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="Green" Margin="0,0,0,20"/>
-
-                    <TextBlock Text="ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" Foreground="#A0A0A0"/>
-                    <TextBlock Text="{Binding CurrentOrder.TotalAmount, StringFormat={}{0:N0} ₽}" FontSize="32" FontWeight="Bold" Foreground="#81C784" Margin="0,0,0,20"/>
-
+                    
                     <Button x:Name="BtnPay" Content="ПРИНЯТЬ ОПЛАТУ (ЗАКРЫТЬ)" Margin="0,5" Background="#4CAF50" BorderBrush="#4CAF50" Foreground="#FFFFFF" Click="Buy_Button"/>
                     <Button x:Name="BtnDeleteOrder" Content="УДАЛИТЬ ВЕСЬ ЗАКАЗ" Margin="0,5" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="#E53935" Foreground="#E53935" Click="Delete_Button"/>
 
@@ -145,7 +142,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" Background="#E0E0E0"/>
 
                 <TabControl Grid.Row="3"
                             ItemsSource="{Binding CurrentOrder.Bills}"

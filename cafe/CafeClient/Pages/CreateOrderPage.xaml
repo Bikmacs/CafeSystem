@@ -1,37 +1,95 @@
 ﻿<Page x:Class="CafeClient.Pages.CreateOrderPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" 
-      Title="Создание заказа"
-      Background="White">
+      Title="Выбор стола"
+      Background="#F1F5F9"> 
 
-    <StackPanel Margin="30" Width="300" VerticalAlignment="Center">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/> 
+            <RowDefinition Height="Auto"/> 
+        </Grid.RowDefinitions>
 
-        <TextBlock Text="Новый заказ" FontSize="24"  
-                   Margin="0,0,0,20" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Text="Выберите стол" FontSize="26" FontWeight="Bold" 
+                   Foreground="#1E293B" HorizontalAlignment="Center" Margin="0,15,0,5"/>
 
-        <TextBlock Text="Выберите стол:" FontSize="16" Margin="0,0,0,5"/>
+        <Viewbox Grid.Row="1" Margin="10" Stretch="Uniform">
+            <Border Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="10" Padding="15">
+                <Canvas Width="1000" Height="650">
+                    
+                    <Canvas.Resources>
+                        <DataTemplate x:Key="TableTemplate">
+                            <Button Width="{Binding Width}" Height="{Binding Height}" Click="Table_Click" Cursor="Hand" Focusable="False">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="TableBorder" 
+                                                Background="{Binding BackgroundColor}" 
+                                                CornerRadius="{Binding CornerRadius}" 
+                                                BorderBrush="#64748B" BorderThickness="1.5">
+                                            
+                                            <TextBlock Text="{Binding TableNumber}" FontSize="24" FontWeight="Bold" 
+                                                       Foreground="#0F172A" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="TableBorder" Property="Opacity" Value="0.7"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DataTemplate>
+                    </Canvas.Resources>
 
-        <ComboBox x:Name="TableComboBox"
-                  Height="50" 
-                  Margin="0,0,0,20"
-                  FontSize="16"
-                  Padding="10,0"
-                  ItemsSource="{Binding Tables}" 
-                  DisplayMemberPath="DisplayName" 
-                  SelectedItem="{Binding SelectedTable, Mode=TwoWay}"/>
+                    <Path Data="M 10,10 L 990,10 L 990,640 L 10,640 Z" Stroke="#94A3B8" StrokeThickness="2" StrokeDashArray="4 4"/>
 
-        <Button Content="СОЗДАТЬ ЗАКАЗ"
-                Height="50"
-                FontSize="16"
-                FontWeight="Bold"
-                Click="CreateOrder_Click"/>
+                    <Border Canvas.Left="40" Canvas.Top="30" Width="640" Height="120" Background="#F8FAFC" BorderBrush="#64748B" BorderThickness="2" CornerRadius="10">
+                        <Grid>
+                            <TextBlock Text="КУХНЯ" Foreground="#475569" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
 
-        <Button Content="Назад"
-                Margin="0,10"
-                Style="{StaticResource MaterialDesignOutlinedButton}"
-                Click="BackButton_Click"/>
-    </StackPanel>
+                    <Border Canvas.Left="700" Canvas.Top="30" Width="260" Height="120" Background="#F8FAFC" BorderBrush="#64748B" BorderThickness="2" CornerRadius="10">
+                        <Grid>
+                            <TextBlock Text="БАР" Foreground="#475569" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    
+                    <ItemsControl ItemsSource="{Binding MapTables}" ItemTemplate="{StaticResource TableTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </Canvas>
+            </Border>
+        </Viewbox>
+
+        <Grid Grid.Row="2" Margin="15" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="НАЗАД" Width="140" Height="50" FontSize="18" FontWeight="Bold" 
+                    Background="#E2E8F0" Foreground="#1E293B" Click="BackButton_Click"/>
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Rectangle Width="25" Height="25" Fill="#B3FFB3" RadiusX="4" RadiusY="4" Stroke="#64748B" StrokeThickness="1"/>
+                <TextBlock Text="— Свободен" Margin="10,0,25,0" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold"/>
+                
+                <Rectangle Width="25" Height="25" Fill="#FFB3B3" RadiusX="4" RadiusY="4" Stroke="#64748B" StrokeThickness="1"/>
+                <TextBlock Text="— Занят" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </Page>

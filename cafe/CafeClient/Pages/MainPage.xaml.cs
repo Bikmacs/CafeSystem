@@ -24,16 +24,18 @@ namespace CafeClient.Pages
         private string _currentCategory = null;
         private DispatcherTimer _orderTimer;
         private bool _isRefreshingOrders = false;
+        private readonly bool _isCookies;
 
         public MainPage(ApiService apiService, bool isCookies)
         {
             InitializeComponent();
             _apiService = apiService;
+            _isCookies = isCookies;
 
             if (!string.IsNullOrEmpty(CurrentUser.Token))
                 _apiService.SetAuthorizationToken(CurrentUser.Token);
 
-            if (!isCookies)
+            if (!_isCookies)
             {
                 ButtonUser.Visibility = Visibility.Collapsed;
                 ButtonMenu.Visibility = Visibility.Collapsed;
@@ -102,7 +104,8 @@ namespace CafeClient.Pages
                 var text = _searchText.ToLowerInvariant();
                 return (item.Name?.ToLowerInvariant().Contains(text) ?? false)
                     || (item.Description?.ToLowerInvariant().Contains(text) ?? false)
-                    || (item.Category?.ToLowerInvariant().Contains(text) ?? false);
+                    || (item.Category?.ToLowerInvariant().Contains(text) ?? false)
+                    || (item.Tags?.Any(t => t.TagName.ToLowerInvariant().Contains(text)) ?? false);
             }
             else if (!string.IsNullOrEmpty(_currentCategory))
             {
@@ -271,10 +274,8 @@ namespace CafeClient.Pages
         private void MenuListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if(MenuListView.SelectedItem is not MenuItemResponseDto selectedItem) return;
-
-            NavigationService?.Navigate(new DishPage(selectedItem));
+            NavigationService?.Navigate(new DishPage(selectedItem, _isCookies, _apiService));
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new UserPage(_apiService));

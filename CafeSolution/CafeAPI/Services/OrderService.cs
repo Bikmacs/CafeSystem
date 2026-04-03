@@ -20,7 +20,7 @@ namespace CafeAPI.Services
         {
             var order = await orderRepository.GetOrderByIdAsync(orderId);
             if (order == null) return false;
-            if (order.Status == "Оплачен" || order.Status == "Закрыт")
+            if (order.Status is "Оплачен" or "Закрыт")
                 throw new Exception("Нельзя добавить блюда в закрытый заказ.");
 
             foreach (var item in itemsDto.Items)
@@ -118,7 +118,7 @@ namespace CafeAPI.Services
         public async Task<List<OrderResponseDto>> GetAllOrdersAsync()
         {
             var orders = await orderRepository.GetAllAsync();
-            var orderDtos = orders.Select(order => new OrderResponseDto
+            var ordersDto = orders.Select(order => new OrderResponseDto
             {
                 OrderId = order.OrderId,
                 UserName = order.User?.FullName ?? "Неизвестно",
@@ -128,7 +128,7 @@ namespace CafeAPI.Services
                 Status = order.Status,
                 TotalAmount = order.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0
             }).ToList();
-            return orderDtos;
+            return ordersDto;
         }
 
         public async Task<OrderResponseDto?> GetOrderByIdAsync(int id)
@@ -314,7 +314,7 @@ namespace CafeAPI.Services
             foreach (var order in reportOrders)
             {
                 ws1.Cell(currentRow, 1).Value = order.OrderId;
-                ws1.Cell(currentRow, 2).Value = order.CreatedAt.ToString("g"); // Короткий формат дата+время
+                ws1.Cell(currentRow, 2).Value = order.CreatedAt.ToString("g");
                 ws1.Cell(currentRow, 3).Value = $"№ {order.TableNumber}";
                 ws1.Cell(currentRow, 4).Value = order.User?.FullName ?? "Не указан";
 
@@ -335,8 +335,9 @@ namespace CafeAPI.Services
             ws2.Cell("A3").Value = "ФИО Официанта";
             ws2.Cell("B3").Value = "Кол-во чеков";
             ws2.Cell("C3").Value = "Общая выручка";
-            ws2.Range("A3:C3").Style.Font.Bold = true;
-            ws2.Range("A3:C3").Style.Fill.BackgroundColor = XLColor.PastelBlue;
+            ws2.Cell("D3").Value = "Премия";
+            ws2.Range("A3:D3").Style.Font.Bold = true;
+            ws2.Range("A3:D3").Style.Fill.BackgroundColor = XLColor.PastelBlue;
 
             var staffStats = reportOrders
                 .GroupBy(o => o.User?.FullName ?? "Неизвестно")
@@ -351,10 +352,16 @@ namespace CafeAPI.Services
             var staffRow = 4;
             foreach (var stat in staffStats)
             {
+                
                 ws2.Cell(staffRow, 1).Value = stat.Name;
                 ws2.Cell(staffRow, 2).Value = stat.Count;
+                
                 ws2.Cell(staffRow, 3).Value = stat.Sum;
                 ws2.Cell(staffRow, 3).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
+                
+                ws2.Cell(staffRow, 4).Value = stat.Sum * 0.01m;
+                ws2.Cell(staffRow, 4).Style.NumberFormat.Format = "#,##0.00\" ₽\"";
+                
                 staffRow++;
             }
 
@@ -383,8 +390,6 @@ namespace CafeAPI.Services
 
             var total = reportOrders.Sum(order =>
                 order.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0);
-
-            return (reportOrders, total);
 
             return (reportOrders, total);
         }

@@ -136,15 +136,19 @@ namespace CafeAPI.Services
                 Category = item.Category?.Name ?? "Категория не загружена",
                 Available = item.Available,
                 Image = item.Image,
-                
+
                 Ingredients = item.DishItems?.Select(di => new DishItemResponse
                 {
-                    
                     IngredientName = di.Ingredient?.Name ?? "Неизвестно",
                     Amount = di.Amount,
                     Unit = di.UnitType.ToString()
-                    
-                }).ToList() ?? new List<DishItemResponse>()
+                }).ToList() ?? [],
+                
+                Tags = item.Tags?.Select(t => new TagDto
+                {
+                    TagId = t.TagId,
+                    TagName = t.TagName
+                }).ToList() ?? []
             };
         }
 

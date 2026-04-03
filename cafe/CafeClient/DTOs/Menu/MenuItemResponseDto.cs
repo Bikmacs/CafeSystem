@@ -11,5 +11,13 @@
         public string? Image { get; set; }
 
         public List<DishItemResponse> Ingredients { get; set; } = new();
+        
+        public List<TagDto> Tags { get; set; } = new(); 
+    }
+
+    public class TagDto
+    {
+        public int TagId { get; set; }
+        public string TagName { get; set; }
     }
 }

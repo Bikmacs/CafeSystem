@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CafeAPI.Models.Helpers;
 
 namespace CafeAPI.Models
 {
@@ -22,5 +23,7 @@ namespace CafeAPI.Models
         public ICollection<DishItems> DishItems { get; set; } = new List<DishItems>();
 
         public ICollection<OrderItem> OrderItems { get; init; } = new List<OrderItem>();
+        
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
