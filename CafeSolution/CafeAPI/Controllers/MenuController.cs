@@ -88,5 +88,12 @@ namespace CafeAPI.Controllers
     
             return Ok(new { ImageUrl = $"/images/{fileName}" });
         }
+        
+        [HttpGet("GetCategories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var result = await menuService.GetCategories();
+            return result.Any() ? Ok(result) : NotFound("Список пуст");
+        }
     }
 }
