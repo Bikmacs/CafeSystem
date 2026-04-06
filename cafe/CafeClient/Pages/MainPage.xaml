@@ -165,11 +165,11 @@
             </TabControl>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="2" Background="White" BorderBrush="#DDDDDD" BorderThickness="1" Margin="10,0">
+        <Border Grid.Row="1" Grid.Column="2" Background="White" BorderBrush="#DDDDDD" BorderThickness="1">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="Категории" HorizontalAlignment="Center" FontSize="30"
                            FontWeight="SemiBold" Margin="5" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
                     <WrapPanel Margin="5" HorizontalAlignment="Center">
                         <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Супы" Tag="Супы"
                                 Click="CategoryButton_Click" />
@@ -189,6 +189,8 @@
                                 Click="CategoryButton_Click" />
                         <Button Height="60" Width="150" Margin="5" FontSize="18" Content="Соусы" Tag="Соусы"
                                 Click="CategoryButton_Click" />
+                        <Button Height="60" Width="150" Margin="5" FontSize="18" Content="СБРОСИТЬ"
+                                Click="ResetButton_Click" />
 
                     </WrapPanel>
 
@@ -207,7 +209,7 @@
                 <TextBlock Grid.Row="1" Text="Меню" FontSize="30" FontWeight="SemiBold" Margin="0,0,0,10" />
                 <ListView Grid.Row="2" x:Name="MenuListView" BorderThickness="0"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
                           MouseDoubleClick="MenuListView_MouseDoubleClick"
                           HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>
@@ -250,7 +252,7 @@
                                         <TextBlock Text="{Binding Price, StringFormat={}{0} ₽}" FontWeight="Bold"
                                                    Foreground="#2E7D32" FontSize="20" VerticalAlignment="Center" />
                                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                                HorizontalAlignment="Right" Width="36" Height="36"
+                                                HorizontalAlignment="Right" Width="70" Height="50"
                                                 Click="AddToCart_Click"
                                                 ToolTip="Добавить в заказ">
                                             <materialDesign:PackIcon Kind="Plus" />

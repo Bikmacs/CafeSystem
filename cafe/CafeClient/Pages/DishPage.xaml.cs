@@ -14,6 +14,8 @@ namespace CafeClient.Pages
         private readonly bool _isCookies;
         private readonly ApiService _apiService;
         private readonly MenuItemResponseDto _currentDish;
+        
+        public bool IsAdmin => _isCookies;
 
         public DishPage(MenuItemResponseDto dish, bool isCookies, ApiService apiService)
         {

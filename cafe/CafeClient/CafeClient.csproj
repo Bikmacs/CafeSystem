@@ -30,9 +30,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\DishPage\" />
-    <Folder Include="Resources\LoginPage\" />
-  </ItemGroup>
-
 </Project>
