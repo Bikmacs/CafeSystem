@@ -12,6 +12,7 @@ namespace CafeAPI.Interfaces.IServices
         Task<bool> DeleteItemMenu(int id);
         Task<MenuItemResponseDto> GetMenuItemById(int id);
         Task<List<CategoryDto>> GetAll();
+        Task<List<CategoryDto>> GetCategories();
 
 
     }

@@ -125,6 +125,19 @@ namespace CafeAPI.Services
             return result;
         }
 
+        public async Task<List<CategoryDto>> GetCategories()
+        {
+            var categories = await categoryRepository.GetAllAsync();
+
+            var categoryDto = categories.Select(c => new CategoryDto
+            {
+                Id = c.CategoryId,
+                Name = c.Name
+            }).ToList();
+
+            return categoryDto;
+        }
+
         private static MenuItemResponseDto FromEntity(MenuItem item)
         {
             return new MenuItemResponseDto
