@@ -103,17 +103,7 @@
                      FontWeight="SemiBold"
                      Margin="0,0,0,20"
                      materialDesign:HintAssist.Hint="Название блюда"
-                     materialDesign:HintAssist.IsFloating="True" />
-
-            <Border Grid.Row="2" Background="#F1F8E9" BorderBrush="#C5E1A5" BorderThickness="1" CornerRadius="8"
-                    Padding="15,10" HorizontalAlignment="Stretch">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="CheckCircleOutline" Foreground="#4CAF50" Width="24" Height="24"
-                                             VerticalAlignment="Center" />
-                    <TextBlock Text="Доступно для заказа" Foreground="#2E7D32" FontSize="16" FontWeight="Medium"
-                               Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-                </StackPanel>
-            </Border>
+                     materialDesign:HintAssist.IsFloating="True" />  
 
             <TextBox Grid.Row="4"
                      Text="{Binding Price, StringFormat={}{0:0.##} ₽, Mode=OneWay}"

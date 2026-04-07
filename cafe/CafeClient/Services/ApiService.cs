@@ -26,7 +26,8 @@ namespace CafeClient.Services
             public const string GetAllOrders = "api/Orders/GetAll";
             public const string CreateOrder = "api/Orders/CreateOrder";
             public const string GetKitchen = "api/Orders/GetActiveOrders";
-            public const string Categories = "Category";
+            public const string GetCategories = "api/Menu/GetCategories";
+
 
             public static string DeleteUser(int id) => $"api/User/DeleteUser?id={id}";
             public static string UpdateUser(int id, int role) => $"api/User/{id}/UpdateUser?Role={role}";
@@ -104,7 +105,7 @@ namespace CafeClient.Services
             => await DeleteAsync(Endpoints.DeleteMenuItem(id));
 
         public async Task<List<CategoryDto>?> GetCategoriesAsync()
-            => await GetAsync<List<CategoryDto>>(Endpoints.Categories);
+            => await GetAsync<List<CategoryDto>>(Endpoints.GetCategories);
 
         #endregion
 

@@ -16,7 +16,7 @@ namespace CafeClient.Pages
 
         private CreateMenuItemDto _newMenuItem = new CreateMenuItemDto();
 
-        private CreateMenuItemDto NewMenuItem
+        public CreateMenuItemDto NewMenuItem
         {
             get => _newMenuItem;
             set

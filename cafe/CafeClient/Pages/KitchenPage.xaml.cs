@@ -14,8 +14,8 @@ namespace CafeClient.Pages
     public partial class KitchenPage : Page
     {
         private readonly ApiService _apiService;
-        private DispatcherTimer _dataRefreshTimer;
-        private DispatcherTimer _clockTimer;
+        private readonly DispatcherTimer _dataRefreshTimer;
+        private readonly DispatcherTimer _clockTimer;
 
         public KitchenPage(ApiService apiService)
         {
@@ -26,7 +26,6 @@ namespace CafeClient.Pages
             _dataRefreshTimer.Interval = TimeSpan.FromSeconds(10);
             _dataRefreshTimer.Tick += async (s, e) => await LoadKitchenOrders();
 
-            // таймер часов
             _clockTimer = new DispatcherTimer();
             _clockTimer.Interval = TimeSpan.FromSeconds(1);
             _clockTimer.Tick += ClockTimer_Tick;

@@ -121,6 +121,12 @@ namespace CafeClient.Pages
             _currentCategory = button?.Tag?.ToString();
             _menuView.Refresh();
         }
+        
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentCategory = null;
+            _menuView.Refresh();
+        }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
