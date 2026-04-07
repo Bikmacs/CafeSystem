@@ -88,5 +88,51 @@ namespace CafeClient.Pages
             if (NavigationService.CanGoBack)
                 NavigationService.GoBack();
         }
+
+        private async void ButtonState_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || button.DataContext is not OrderResponseDto selectedOrder)
+            {
+                return;
+            }
+
+            string nextStatus = "";
+
+            if (selectedOrder.Status == "Готовится") 
+            {
+                nextStatus = "Готов";
+            }
+            else if (selectedOrder.Status == "Готов")
+            {
+                MessageBox.Show("Заказ уже готов и ожидает выдачи/оплаты.");
+                return;
+            }
+            
+            var result = MessageBox.Show($"Изменить статус заказа №{selectedOrder.OrderId} на '{nextStatus}'?",
+                "Обновление статуса", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    bool success = await _apiService.UpdateOrderStatusAsync(selectedOrder.OrderId, nextStatus);
+
+                    if (success)
+                    {
+                        await LoadKitchenOrders();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось обновить статус на сервере.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}");
+                }
+            }
+        }
+        
+        
     }
 }

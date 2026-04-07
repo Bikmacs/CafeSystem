@@ -1,10 +1,10 @@
 ﻿<Page x:Class="CafeClient.Pages.KitchenPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="1080" d:DesignWidth="1920"
       Title="Кухонный Экран"
       Background="#EEEEEE"
@@ -12,32 +12,36 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="#212121" Padding="20,0">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Content="НАЗАД" Click="BackMenuItem_Click"/>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Content="НАЗАД"
+                            Click="BackMenuItem_Click" />
                 </StackPanel>
 
-                <TextBlock Text="КУХОННЫЙ ТЕРМИНАЛ" 
-                           Foreground="White" 
-                           
-                           FontSize="24" 
-                           FontWeight="Bold" 
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center"/>
+                <TextBlock Text="КУХОННЫЙ ТЕРМИНАЛ"
+                           Foreground="White"
+
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="ClockOutline" Foreground="White" Width="30" Height="30" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <TextBlock x:Name="ClockTextBlock" Text="00:00:00" Foreground="White" FontSize="32" FontWeight="Bold"/>
+                    <materialDesign:PackIcon Kind="ClockOutline" Foreground="White" Width="30" Height="30"
+                                             VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBlock x:Name="ClockTextBlock" Text="00:00:00" Foreground="White" FontSize="32"
+                               FontWeight="Bold" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="10">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      Padding="10">
             <ItemsControl x:Name="KitchenListView">
 
                 <ItemsControl.ItemsPanel>
@@ -51,21 +55,26 @@
                         <materialDesign:Card Width="350" Margin="10" UniformCornerRadius="8" Background="White">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <StackPanel Grid.Row="0">
                                     <Border Background="#424242" Padding="15,10">
                                         <Grid>
-                                            <TextBlock Text="{Binding TableNumber, StringFormat=СТОЛ #{0}}" 
-                                                       Foreground="White" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="{Binding TableNumber, StringFormat=СТОЛ #{0}}"
+                                                       Foreground="White" FontSize="22" FontWeight="Bold"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Left" />
 
-                                            <Border Background="#D32F2F" CornerRadius="4" Padding="8,2" HorizontalAlignment="Right">
+                                            <Border Background="#D32F2F" CornerRadius="4" Padding="8,2"
+                                                    HorizontalAlignment="Right">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <materialDesign:PackIcon Kind="TimerSand" Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                    <TextBlock Text="{Binding WaitingTime}" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                                                    <materialDesign:PackIcon Kind="TimerSand" Foreground="White"
+                                                                             VerticalAlignment="Center"
+                                                                             Margin="0,0,5,0" />
+                                                    <TextBlock Text="{Binding WaitingTime}" Foreground="White"
+                                                               FontSize="18" FontWeight="Bold" />
                                                 </StackPanel>
                                             </Border>
                                         </Grid>
@@ -77,26 +86,37 @@
                                         <DataTemplate>
                                             <Grid Margin="0,6">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <Border Grid.Column="0" Background="#D32F2F" CornerRadius="4" Width="40" Height="40" Margin="0,0,15,0">
-                                                    <TextBlock Text="{Binding Quantity}" Foreground="White" FontWeight="Bold" FontSize="22" 
-                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <Border Grid.Column="0" Background="#D32F2F" CornerRadius="4"
+                                                        Width="40" Height="40" Margin="0,0,15,0">
+                                                    <TextBlock Text="{Binding Quantity}" Foreground="White"
+                                                               FontWeight="Bold" FontSize="22"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
 
-                                                <TextBlock Grid.Column="1" Text="{Binding MenuItemName}" FontSize="18" FontWeight="Medium" 
-                                                           TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding MenuItemName}" FontSize="18"
+                                                           FontWeight="Medium"
+                                                           TextWrapping="Wrap" VerticalAlignment="Center" />
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
 
                                 <Border Grid.Row="2" Background="#EEEEEE" Padding="10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
-                                    <DockPanel LastChildFill="False">
-                                        <TextBlock Text="{Binding Status}" FontWeight="Bold" Foreground="#1976D2" VerticalAlignment="Center" FontSize="16"/>
-
+                                    <DockPanel LastChildFill="True">
+                                        <Button Content="{Binding Status}"
+                                                FontWeight="Bold"
+                                                FontSize="16"
+                                                Style="{StaticResource MaterialDesignFlatButton}"
+                                                Foreground="Black"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                HorizontalAlignment="Stretch" 
+                                                HorizontalContentAlignment="Center" 
+                                                Click="ButtonState_OnClick"/>
                                     </DockPanel>
                                 </Border>
                             </Grid>
