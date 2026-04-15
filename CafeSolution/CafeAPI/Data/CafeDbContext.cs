@@ -80,8 +80,8 @@ namespace CafeAPI.Data
                     new MenuItem
                     {
                         MenuItemId = 1, Name = "Борщ",
-                        Description = "Классический украинский борщ с мясом, свеклой и сметаной", Price = 450,
-                        CategoryId = 1, Available = false
+                        Description = "Классический борщ с мясом, свеклой и сметаной", Price = 450,
+                        CategoryId = 1, Available =  tur
                     },
                     new MenuItem
                     {
