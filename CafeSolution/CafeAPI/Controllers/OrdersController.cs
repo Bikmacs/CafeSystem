@@ -44,7 +44,6 @@ namespace CafeAPI.Controllers
             }
         }
 
-
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetAllOrders()
         {
@@ -115,6 +114,7 @@ namespace CafeAPI.Controllers
         }
 
 
+        [Authorize(Roles = "Admin,Waiter,Cook")]
         [HttpPatch("{id}/statusUpdate")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] string newStatus)
         {
@@ -142,6 +142,7 @@ namespace CafeAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Waiter,Cook")]
         [HttpGet("GetActiveOrders")]
         public async Task<ActionResult<List<OrderResponseDto>>> GetActiveOrders()
         {
