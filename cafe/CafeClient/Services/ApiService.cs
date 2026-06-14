@@ -39,7 +39,7 @@ namespace CafeClient.Services
 
             public static string AddItemsToOrder(int orderId) => $"api/Orders/{orderId}/AddItemsToOrder";
             public static string DeleteOrder(int id) => $"api/Orders/{id}/DeleteOrder";
-            public static string DeleteMenuItem(int id) => $"api/Menu/{id}/DeleteItem";
+            public static string DeleteMenuItem(int id) => $"api/Menu/{id}";
             public static string ExportRevenue(bool monthly) => $"api/Orders/ExportRevenue?isMonthly={monthly}";
             public static string UploadMenuItemImage(int id) => $"api/Menu/{id}/image";
         }
