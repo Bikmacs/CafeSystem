@@ -374,7 +374,6 @@ namespace CafeAPI.Services
 
         private async Task<(List<Order> Orders, decimal TotalSum)> GetReportDataAsync(bool isMonthly)
         {
-            // Корректно вычисляем дату начала с учетом смещения кафе (+5 часов), как в основном методе
             var currentCafeTime = DateTime.UtcNow.AddHours(5);
             var dateStart = isMonthly 
                 ? new DateTime(currentCafeTime.Year, currentCafeTime.Month, 1) 

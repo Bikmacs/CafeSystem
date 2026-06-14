@@ -34,6 +34,7 @@ namespace IntegrationTests.Controllers
         [Test]
         public async Task GetMenuAsync_ReturnMenu()
         {
+            AuthenticateAdminAsRole();
             Dbcontext.MenuItems.Add(_testMenuItem);
             await Dbcontext.SaveChangesAsync();
 
@@ -53,6 +54,7 @@ namespace IntegrationTests.Controllers
         [Test]
         public async Task AddEatOnMenu()
         {
+            AuthenticateAdminAsRole();
             Dbcontext.Category.Add(_testMenuItem.Category);
             await Dbcontext.SaveChangesAsync();
 
@@ -77,6 +79,7 @@ namespace IntegrationTests.Controllers
         [Test]
         public async Task DeleteMenuAsync_ReturnMenu()
         {
+            AuthenticateAdminAsRole();
             Dbcontext.MenuItems.Add(_testMenuItem);
             await Dbcontext.SaveChangesAsync();
 
@@ -95,10 +98,20 @@ namespace IntegrationTests.Controllers
         [Test]
         public async Task GetMenuItemById()
         {
+            AuthenticateAdminAsRole();
+            
+            Dbcontext.MenuItems.Add(_testMenuItem);
+            await Dbcontext.SaveChangesAsync();
+            var id = _testMenuItem.MenuItemId;
+            
             Dbcontext.ChangeTracker.Clear();
             
-            var response = await HttpClient.DeleteAsync($"/api/Menu/{_rnd}");
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"_rnd: {_rnd}");
+            var response = await HttpClient.GetAsync($"/api/Menu/{id}");
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            
+            var itemApi = await response.Content.ReadFromJsonAsync<MenuItemResponseDto>();
+            Assert.IsNotNull(itemApi, "API вернул пустой объект блюда");
+            Assert.AreEqual(_testMenuItem.Name, itemApi.Name, "Имя блюда в ответе не совпадает!");
         }
         
     }

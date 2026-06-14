@@ -57,16 +57,23 @@ public class UserControllerTests : BaseIntegrationTest
     [Test]
     public async Task LoginUser_Success()
     {
+        AuthenticateAdminAsRole(); 
+
         var response = await HttpClient.PostAsJsonAsync("/api/User/Register", _user);
         var responseString = await response.Content.ReadAsStringAsync();
         Assert.That(response.IsSuccessStatusCode, Is.True,
-            $"Сервер не смог зарегистрировать пользователя. Ошибка: {responseString}");
+            $"Сервер не смог зарегистрировать пользователя для теста логина. Ошибка: {responseString}");
+    
         Dbcontext.ChangeTracker.Clear();
+    
         HttpClient.DefaultRequestHeaders.Authorization = null;
 
         var responseLogin = await HttpClient.PostAsJsonAsync("/api/User/Login", _loginUser);
-        var responseLoginUser = await response.Content.ReadAsStringAsync();
+    
+        var responseLoginUser = await responseLogin.Content.ReadAsStringAsync(); 
+    
         Assert.That(responseLogin.IsSuccessStatusCode, Is.True, $"Сервер отклонил вход. Ошибка: {responseLoginUser}");
-        //Assert.That(responseLoginUser,Does.Contain("ey"), "Ответ не содержит JWT токена (токены начинаются с 'ey')");
+    
+        Assert.That(responseLoginUser, Does.Contain("ey").Or.Contain("token"), "Ответ сервера не содержит токен доступа");
     }
 }

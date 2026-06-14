@@ -33,8 +33,8 @@ public class OrdersControllerTest : BaseIntegrationTest
         _createOrderDto = new CreateOrderDto
         {
             UserId = 1,
-            TableNumber = 1,
-            Status = "Готовиться",
+            TableNumber = 777,
+            Status = "Готовится",
             Items = [_orderItemCreateDto]
         };
         _existingOrder = new Order
@@ -61,12 +61,14 @@ public class OrdersControllerTest : BaseIntegrationTest
 
         var response = await HttpClient.PostAsJsonAsync("/api/Orders/CreateOrder", _createOrderDto);
         response.EnsureSuccessStatusCode();
-
-        var orderInDb = Dbcontext.Orders.FirstOrDefault(o => o.OrderId == 1);
-
+        
+        var orderInDb = Dbcontext.Orders.FirstOrDefault(o => o.TableNumber == _createOrderDto.TableNumber);
         Assert.That(orderInDb, Is.Not.Null);
-        Assert.AreEqual(orderInDb.OrderId, 1);
-        //сравнить данные 
+        
+        Assert.AreEqual(_createOrderDto.TableNumber, orderInDb.TableNumber);
+        Assert.AreEqual(_createOrderDto.UserId, orderInDb.UserId);
+        
+        Assert.AreEqual("Готовится", orderInDb.Status);
     }
 
     [Test]
@@ -74,13 +76,20 @@ public class OrdersControllerTest : BaseIntegrationTest
     {
         AuthenticateWaiterAsRole();
 
+        Dbcontext.Orders.Add(_existingOrder);
+        Dbcontext.Orders.Add(new Order { UserId = 2, TableNumber = 5, Status = "Создан" });
+        await Dbcontext.SaveChangesAsync();
+
         var response = await HttpClient.GetAsync("/api/Orders/GetAll");
         response.EnsureSuccessStatusCode();
 
         var ordersDb = Dbcontext.Orders.ToList();
         var ordersApi = await response.Content.ReadFromJsonAsync<List<OrderResponseDto>>();
 
-        if (ordersApi != null) Assert.That(ordersApi.Count, Is.EqualTo(ordersDb.Count));
+        if (ordersApi != null) 
+        {
+            Assert.That(ordersApi.Count, Is.EqualTo(ordersDb.Count), "Количество в API и БД отличается");
+        }
     }
 
     [Test]
@@ -117,7 +126,7 @@ public class OrdersControllerTest : BaseIntegrationTest
     }
 
     [Test]
-    public async Task DeleteItemsToOrder_ValidItems_sSuccessfully()
+    public async Task DeleteOrder_ValidId_DeletesSuccessfully()
     {
         AuthenticateWaiterAsRole();
 
@@ -157,14 +166,21 @@ public class OrdersControllerTest : BaseIntegrationTest
     {
         AuthenticateWaiterAsRole();
 
+        var matchingOrder = new Order { UserId = 1, TableNumber = 12, Status = TargetStatus };
+        var nonMatchingOrder = new Order { UserId = 1, TableNumber = 13, Status = "Завершен" };
+        Dbcontext.Orders.AddRange(matchingOrder, nonMatchingOrder);
+        await Dbcontext.SaveChangesAsync();
+
         var response = await HttpClient.GetAsync($"/api/Orders/{TargetStatus}/status");
         var responseApi = await response.Content.ReadFromJsonAsync<List<OrderResponseDto>>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(responseApi != null && responseApi.All(x => x.Status == TargetStatus), Is.True);
-        });
+            Assert.IsNotNull(responseApi);
+            Assert.That(responseApi.Count, Is.EqualTo(1), "Должен вернуться только ОДИН заказ с этим статусом");
+            Assert.That(responseApi.All(x => x.Status == TargetStatus), Is.True, "В выборку попали заказы с чужим статусом!");
+        }
     }
 
     [Test]

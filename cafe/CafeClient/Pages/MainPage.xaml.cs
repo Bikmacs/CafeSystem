@@ -223,9 +223,18 @@ namespace CafeClient.Pages
 
         private async void Button_Click_ExcelAsync(object sender, RoutedEventArgs e)
         {
-            bool isMonthly = true;
+            MessageBoxResult result = MessageBox.Show(
+                "Какой отчет вы хотите сформировать?\n\n[Да] — За текущий МЕСЯЦ\n[Нет] — За текущий ДЕНЬ\n[Отмена] — Выйти", 
+                "Выбор периода отчета", 
+                MessageBoxButton.YesNoCancel, 
+                MessageBoxImage.Question);
 
-            var fileBytes = await _apiService.ExportRevenueExcelAsync(isMonthly);
+            if (result == MessageBoxResult.Cancel)
+            {
+                return; 
+            }
+            bool isMonthly = (result == MessageBoxResult.Yes);
+                 var fileBytes = await _apiService.ExportRevenueExcelAsync(isMonthly);
 
             if (fileBytes != null)
             {

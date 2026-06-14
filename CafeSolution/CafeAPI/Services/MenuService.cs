@@ -99,9 +99,13 @@ namespace CafeAPI.Services
         }
 
 
-        public Task<MenuItemResponseDto> GetMenuItemById(int id)
+        public async Task<MenuItemResponseDto> GetMenuItemById(int id)
         {
-            throw new NotImplementedException();
+            var item = await menuItemRepository.GetMenuItemByIdAsync(id);
+    
+            if (item == null) return null!;
+
+            return FromEntity(item);
         }
 
         public async Task<List<CategoryDto>> GetAll()
