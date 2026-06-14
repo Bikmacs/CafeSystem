@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="pizza.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="app.ico" />
   </ItemGroup>
 
@@ -28,6 +24,13 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="pizza.jpg" />
+    <Resource Include="pizza.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

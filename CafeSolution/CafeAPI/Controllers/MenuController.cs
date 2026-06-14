@@ -9,10 +9,10 @@ using Task = DocumentFormat.OpenXml.Office2021.DocumentTasks.Task;
 namespace CafeAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Admin,Waiter")]
     [ApiController]
     public class MenuController(IMenuService menuService) : ControllerBase
     {
+        [Authorize(Roles = "Admin,Waiter")]
         [HttpGet("GetMenu")]
         public async Task<IActionResult> GetMenu()
         {
@@ -20,6 +20,7 @@ namespace CafeAPI.Controllers
             return result.Any() ? Ok(result) : NotFound("Список пуст");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
         public async Task<IActionResult> AddItem([FromBody] CreateMenuItemDto dto)
         {
@@ -34,6 +35,7 @@ namespace CafeAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Waiter")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(int id)
         {
@@ -41,6 +43,7 @@ namespace CafeAPI.Controllers
             return success ? Ok("удалено") : NotFound("Не найдено");
         }
 
+        [Authorize(Roles = "Admin,Waiter")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMenuItemById(int id)
         {
@@ -48,16 +51,18 @@ namespace CafeAPI.Controllers
             return Ok(item);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> AddProducts([FromQuery] CreateProductDto productDto)
         {
             try
             {
                 var unit = ProductUnitHelper.GetProductUnits[productDto.Product];
-                
-                
-                return Ok(new { 
-                    Message = $"Запасы пополнены: {productDto.Product} — {productDto.Quantity} {unit}." 
+
+
+                return Ok(new
+                {
+                    Message = $"Запасы пополнены: {productDto.Product} — {productDto.Quantity} {unit}."
                 });
             }
             catch (Exception e)
@@ -67,28 +72,30 @@ namespace CafeAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("{id}/image")]
         public async Task<IActionResult> UploadImage(int id, IFormFile file) // ← id, не idm
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Файл не выбран");
-    
+
             var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
             if (!Directory.Exists(uploadFolder))
                 Directory.CreateDirectory(uploadFolder);
-    
-            var fileName = $"{id}{Path.GetExtension(file.FileName)}"; 
-            var filePath = Path.Combine(uploadFolder, fileName);      
-    
+
+            var fileName = $"{id}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadFolder, fileName);
+
             using (var fileStream = new FileStream(filePath, FileMode.Create))
                 await file.CopyToAsync(fileStream);
-    
+
             var updateDto = new UpdateMenuItemDto { Image = fileName };
             await menuService.UpdateItemMenu(id, updateDto);
-    
+
             return Ok(new { ImageUrl = $"/images/{fileName}" });
         }
-        
+
+        [Authorize(Roles = "Admin,Waiter")]
         [HttpGet("GetCategories")]
         public async Task<IActionResult> GetCategories()
         {

@@ -102,10 +102,8 @@ public class OrdersControllerTest : BaseIntegrationTest
             Items = [new OrderItemCreateDto { MenuItemId = _testMenuItem.MenuItemId, Quantity = 2 }]
         };
 
-        var response =
-            await HttpClient.PostAsJsonAsync($"/api/Orders/{existingOrder.OrderId}/AddItemsToOrder", requestDto);
+        var response = await HttpClient.PostAsJsonAsync($"/api/Orders/{existingOrder.OrderId}/AddItemsToOrder", requestDto);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-
         var errorBody = await response.Content.ReadAsStringAsync();
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Ошибка: {errorBody}");
         Dbcontext.ChangeTracker.Clear();

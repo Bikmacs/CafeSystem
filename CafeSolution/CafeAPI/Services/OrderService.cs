@@ -374,13 +374,15 @@ namespace CafeAPI.Services
 
         private async Task<(List<Order> Orders, decimal TotalSum)> GetReportDataAsync(bool isMonthly)
         {
-            var dateStart = isMonthly ? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1) : DateTime.Today;
+            // Корректно вычисляем дату начала с учетом смещения кафе (+5 часов), как в основном методе
+            var currentCafeTime = DateTime.UtcNow.AddHours(5);
+            var dateStart = isMonthly 
+                ? new DateTime(currentCafeTime.Year, currentCafeTime.Month, 1) 
+                : currentCafeTime.Date;
+            
+            var allOrders = await orderRepository.GetAllAsync();
 
-            var allUsers = await userRepository.GetUsersAsync();
-
-            var reportOrders = allUsers
-                .Where(u => u.Role.RoleId == 2)
-                .SelectMany(u => u.Orders)
+            var reportOrders = allOrders
                 .Where(o => 
                     !string.IsNullOrWhiteSpace(o.Status) && 
                     o.Status.Trim().Equals("Оплачен", StringComparison.OrdinalIgnoreCase) && 
@@ -389,7 +391,7 @@ namespace CafeAPI.Services
                 .ToList();
 
             var total = reportOrders.Sum(order =>
-                order.OrderItems?.Sum(oi => oi.UnitPrice * oi.Quantity) ?? 0);
+                order.OrderItems?.Sum(oi => (decimal)oi.UnitPrice * oi.Quantity) ?? 0m);
 
             return (reportOrders, total);
         }

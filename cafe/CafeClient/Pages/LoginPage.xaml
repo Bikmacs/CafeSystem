@@ -18,10 +18,8 @@
 
         <Border Grid.Column="1" Background="#F5F5F5" />
 
-        <Grid Grid.Column="0">
-            <Image Source="/pizza.jpg" Stretch="UniformToFill" />
-        </Grid>
-
+        <Image Grid.Column="0" Source="/pizza.jpg" Stretch="UniformToFill" />
+        
         <StackPanel Grid.Column="1"
                     Width="350"
                     Height="400">

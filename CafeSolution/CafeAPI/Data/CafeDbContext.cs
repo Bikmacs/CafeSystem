@@ -81,7 +81,7 @@ namespace CafeAPI.Data
                     {
                         MenuItemId = 1, Name = "Борщ",
                         Description = "Классический борщ с мясом, свеклой и сметаной", Price = 450,
-                        CategoryId = 1, Available =  tur
+                        CategoryId = 1, Available =  true
                     },
                     new MenuItem
                     {
@@ -247,7 +247,6 @@ namespace CafeAPI.Data
 
                 modelBuilder.Entity("MenuItemTag").HasData(
                     // Супы
-                    new { MenuItemsMenuItemId = 1, TagsTagId = 3 }, // Борщ -> Мясо
                     new { MenuItemsMenuItemId = 2, TagsTagId = 3 }, // Куриный суп -> Мясо
                     new { MenuItemsMenuItemId = 3, TagsTagId = 2 }, // Грибной суп -> Вегетарианское
 
