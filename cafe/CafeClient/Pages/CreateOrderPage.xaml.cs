@@ -40,11 +40,8 @@ namespace CafeClient.Pages
         }
 
 
-// --- ИНТЕРЕСНАЯ ПЛАНИРОВКА (40 столов) ---
         private readonly TableConfig[] _realWorldTableConfigs = new TableConfig[]
         {
-            // === ЛЕВОЕ КРЫЛО ===
-            // VIP-Кабинки у левой стены (Большие прямоугольные столы: 100x60)
             new TableConfig { Number = 1, X = 40, Y = 200, Width = 100, Height = 60, CornerRadius = 8 },
             new TableConfig { Number = 2, X = 40, Y = 270, Width = 100, Height = 60, CornerRadius = 8 },
             new TableConfig { Number = 3, X = 40, Y = 340, Width = 100, Height = 60, CornerRadius = 8 },
@@ -52,7 +49,6 @@ namespace CafeClient.Pages
             new TableConfig { Number = 5, X = 40, Y = 480, Width = 100, Height = 60, CornerRadius = 8 },
             new TableConfig { Number = 6, X = 40, Y = 550, Width = 100, Height = 60, CornerRadius = 8 },
 
-            // Малые столы для двоих (Компактные квадраты: 50x50)
             new TableConfig { Number = 7, X = 160, Y = 205, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 8, X = 160, Y = 275, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 9, X = 160, Y = 345, Width = 50, Height = 50, CornerRadius = 8 },
@@ -60,31 +56,28 @@ namespace CafeClient.Pages
             new TableConfig { Number = 11, X = 160, Y = 485, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 12, X = 160, Y = 555, Width = 50, Height = 50, CornerRadius = 8 },
 
-            // === ЦЕНТРАЛЬНЫЙ ЗАЛ (Шахматный порядок / Зигзаг) ===
-            // Круглые столы (60x60, Радиус 30), расставленные со смещением для динамики
-            // Ряд 1
+        
             new TableConfig { Number = 13, X = 280, Y = 230, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 14, X = 390, Y = 230, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 15, X = 500, Y = 230, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 16, X = 610, Y = 230, Width = 60, Height = 60, CornerRadius = 30 },
-            // Ряд 2 (Смещен вправо на 50px)
+
+            
             new TableConfig { Number = 17, X = 330, Y = 320, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 18, X = 440, Y = 320, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 19, X = 550, Y = 320, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 20, X = 660, Y = 320, Width = 60, Height = 60, CornerRadius = 30 },
-            // Ряд 3
+
             new TableConfig { Number = 21, X = 280, Y = 410, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 22, X = 390, Y = 410, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 23, X = 500, Y = 410, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 24, X = 610, Y = 410, Width = 60, Height = 60, CornerRadius = 30 },
-            // Ряд 4 (Смещен вправо на 50px)
+
             new TableConfig { Number = 25, X = 330, Y = 500, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 26, X = 440, Y = 500, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 27, X = 550, Y = 500, Width = 60, Height = 60, CornerRadius = 30 },
             new TableConfig { Number = 28, X = 660, Y = 500, Width = 60, Height = 60, CornerRadius = 30 },
 
-            // === ПРАВОЕ КРЫЛО ===
-            // Малые столы для двоих
             new TableConfig { Number = 29, X = 770, Y = 205, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 30, X = 770, Y = 275, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 31, X = 770, Y = 345, Width = 50, Height = 50, CornerRadius = 8 },
@@ -92,7 +85,7 @@ namespace CafeClient.Pages
             new TableConfig { Number = 33, X = 770, Y = 485, Width = 50, Height = 50, CornerRadius = 8 },
             new TableConfig { Number = 34, X = 770, Y = 555, Width = 50, Height = 50, CornerRadius = 8 },
 
-            // VIP-Кабинки у правой стены
+
             new TableConfig { Number = 35, X = 840, Y = 200, Width = 100, Height = 60, CornerRadius = 8 },
             new TableConfig { Number = 36, X = 840, Y = 270, Width = 100, Height = 60, CornerRadius = 8 },
             new TableConfig { Number = 37, X = 840, Y = 340, Width = 100, Height = 60, CornerRadius = 8 },
