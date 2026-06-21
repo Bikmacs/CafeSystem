@@ -23,7 +23,7 @@ namespace CafeClient.DTOs
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
         public ObservableCollection<OrderItemDto> Items { get; set; } = new();
-        public ObservableCollection<BillDto> Bills { get; set; } = new();
+        public ObservableCollection<BillDto>? Bills { get; set; } = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

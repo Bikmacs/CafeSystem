@@ -1,16 +1,13 @@
 ﻿using CafeClient.DTOs;
 using CafeClient.DTOs.Orders;
 using CafeClient.Services;
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Navigation;
-using System.Linq; 
+
 
 namespace CafeClient.Pages
 {
@@ -23,7 +20,11 @@ namespace CafeClient.Pages
         public OrderResponseDto CurrentOrder
         {
             get => _currentOrder;
-            set { _currentOrder = value; OnPropertyChanged(); }
+            set
+            {
+                _currentOrder = value;
+                OnPropertyChanged();
+            }
         }
 
         public OrderDetailsPage(int orderId, OrderResponseDto order, ApiService apiService)
@@ -49,13 +50,32 @@ namespace CafeClient.Pages
                     {
                         fullOrder.UserName = CurrentOrder.UserName;
                     }
+
                     if (!fullOrder.TableNumber.HasValue && CurrentOrder.TableNumber.HasValue)
                     {
                         fullOrder.TableNumber = CurrentOrder.TableNumber;
                     }
 
-                    CurrentOrder = fullOrder;
+                    if (LocalOrdersCache.TryGet(_orderId, out var localOrder))
+                    {
+                        fullOrder.Bills = localOrder?.Bills;
 
+                        if (fullOrder.Bills != null)
+                            foreach (var bill in fullOrder.Bills)
+                            {
+                                foreach (var billItem in bill.Items)
+                                {
+                                    var itemToRemove =
+                                        fullOrder.Items.FirstOrDefault(y => y.OrderItemId == billItem.OrderItemId);
+                                    if (itemToRemove != null)
+                                    {
+                                        fullOrder.Items.Remove(itemToRemove);
+                                    }
+                                }
+                            }
+                    }
+
+                    CurrentOrder = fullOrder;
                     UpdateButtonsVisibility();
                 }
             }
@@ -79,34 +99,33 @@ namespace CafeClient.Pages
             {
                 if (BtnPay != null) BtnPay.Visibility = Visibility.Visible;
                 if (BtnDeleteOrder != null) BtnDeleteOrder.Visibility = Visibility.Visible;
-                if (BtnSplitBill != null) BtnSplitBill.Visibility = Visibility.Visible; 
+                if (BtnSplitBill != null) BtnSplitBill.Visibility = Visibility.Visible;
             }
         }
 
         private void Back_Button(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
 
         private async void Buy_Button(object sender, RoutedEventArgs e)
         {
-            if (CurrentOrder.Status == "Оплачен" || CurrentOrder.Status == "Закрыт") return;
+            if (CurrentOrder.Status is "Оплачен" or "Закрыт") return;
 
             var result = MessageBox.Show($"Закрыть заказ №{_orderId} и принять оплату?",
-                                         "Оплата", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                "Оплата", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.Yes)
+            if (result != MessageBoxResult.Yes) return;
+            var success = await _apiService.UpdateOrderStatusAsync(_orderId, "Оплачен");
+            if (success)
             {
-                bool success = await _apiService.UpdateOrderStatusAsync(_orderId, "Оплачен");
-                if (success)
-                {
-                    MessageBox.Show("Заказ успешно оплачен и закрыт.");
-                    await LoadFullOrderDetails();
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка при закрытии заказа.");
-                }
+                LocalOrdersCache.Clear(_orderId);
+                MessageBox.Show("Заказ успешно оплачен и закрыт.");
+                await LoadFullOrderDetails();
+            }
+            else
+            {
+                MessageBox.Show("Ошибка при закрытии заказа.");
             }
         }
 
@@ -135,47 +154,47 @@ namespace CafeClient.Pages
 
         private async void Delete_Button(object sender, RoutedEventArgs e)
         {
-            if (CurrentOrder.Status == "Оплачен" || CurrentOrder.Status == "Закрыт") return;
+            if (CurrentOrder.Status is "Оплачен" or "Закрыт") return;
 
             var result = MessageBox.Show($"Вы уверены, что хотите ПОЛНОСТЬЮ удалить заказ №{_orderId}?",
-                                         "Удаление заказа", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                "Удаление заказа", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-            if (result == MessageBoxResult.Yes)
+            if (result != MessageBoxResult.Yes) return;
+            try
             {
-                try
+                var success = await _apiService.DeleteOrderAsync(_orderId);
+                if (success)
                 {
-                    bool success = await _apiService.DeleteOrderAsync(_orderId);
-                    if (success)
-                    {
-                        MessageBox.Show("Заказ удален.");
-                        NavigationService.GoBack();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось удалить заказ.");
-                    }
+                    LocalOrdersCache.Clear(_orderId);
+
+                    MessageBox.Show("Заказ удален.");
+                    NavigationService?.GoBack();
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    MessageBox.Show("Не удалось удалить заказ.");
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
-
 
         private void DeleteItem_Button(object sender, RoutedEventArgs e) => DeleteOrderItem_Click(sender, e);
 
         private async void DeleteOrderItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button button || button.DataContext is not OrderItemDto item) return;
+            if (sender is not Button { DataContext: OrderItemDto item }) return;
 
-            if (CurrentOrder.Status == "Оплачен" || CurrentOrder.Status == "Закрыт")
+            if (CurrentOrder.Status is "Оплачен" or "Закрыт")
             {
                 MessageBox.Show("Невозможно удалить элемент из закрытого заказа.");
                 return;
             }
 
-            var confirm = MessageBox.Show($"Удалить '{item.MenuItemName}'?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var confirm = MessageBox.Show($"Удалить '{item.MenuItemName}'?", "Удаление", MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
             if (confirm != MessageBoxResult.Yes) return;
 
             try
@@ -188,55 +207,65 @@ namespace CafeClient.Pages
                 }
                 else MessageBox.Show("Ошибка удаления.");
             }
-            catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}"); }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
         }
 
         private void AddBill_Button(object sender, RoutedEventArgs e)
         {
             var selected = CurrentOrder.Items.Where(i => i.IsSelected).ToList();
-            if (!selected.Any())
+            if (selected.Count == 0)
             {
                 MessageBox.Show("Пожалуйста, выберите хотя бы один элемент для создания счёта.");
                 return;
             }
 
-            var bill = new BillDto { Id = CurrentOrder.Bills.Count + 1 };
-
-            CurrentOrder.Bills.Add(bill);
-
-            foreach (var item in selected)
+            if (CurrentOrder.Bills != null)
             {
-                item.IsSelected = false;
-                bill.Items.Add(item);
-                CurrentOrder.Items.Remove(item);
+                var nextId = CurrentOrder.Bills.Any() ? CurrentOrder.Bills.Max(b => b.Id) + 1 : 1;
+                
+                var bill = new BillDto { Id = nextId };
+                CurrentOrder.Bills.Add(bill);
+
+                foreach (var item in selected)
+                {
+                    item.IsSelected = false;
+                    bill.Items.Add(item);
+                    CurrentOrder.Items.Remove(item);
+                }
+
+                LocalOrdersCache.Save(CurrentOrder);
             }
 
             OnPropertyChanged(nameof(CurrentOrder));
-
         }
 
         private void DeleteBill_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is BillDto bill)
+            if (sender is not Button { DataContext: BillDto bill }) return;
+            foreach (var item in bill.Items)
             {
-                foreach (var item in bill.Items)
-                {
-                    CurrentOrder.Items.Add(item);
-                }
-
-                CurrentOrder.Bills.Remove(bill);
+                CurrentOrder.Items.Add(item);
             }
+
+            CurrentOrder.Bills?.Remove(bill);
+
+            LocalOrdersCache.Save(CurrentOrder);
+            OnPropertyChanged(nameof(CurrentOrder));
         }
 
         private void NumericOnly(object sender, TextCompositionEventArgs e) => e.Handled = IsTextNumeric(e.Text);
         private static bool IsTextNumeric(string text) => new Regex("[^0-9]+").IsMatch(text);
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
-        protected void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
     }
 }

@@ -40,11 +40,13 @@ namespace CafeClient.Pages
                 ButtonUser.Visibility = Visibility.Collapsed;
                 ButtonMenu.Visibility = Visibility.Collapsed;
                 ButtonKitchen.Visibility = Visibility.Collapsed;
+                DownloadDocument.Visibility = Visibility.Collapsed;
+                AttachButton.Text = "Недоступно!";
             }
                 
 
             _orderTimer = new DispatcherTimer();
-            _orderTimer.Interval = TimeSpan.FromSeconds(10);
+            _orderTimer.Interval = TimeSpan.FromSeconds(5);
             _orderTimer.Tick += OrderTimer_Tick;
 
             this.Unloaded += MainPage_Unloaded;
@@ -67,6 +69,7 @@ namespace CafeClient.Pages
 
         private async Task LoadData()
         {
+            
             var menu = await _apiService.GetMenuAsync();
             if (menu != null)
             {

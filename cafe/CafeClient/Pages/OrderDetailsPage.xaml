@@ -89,7 +89,7 @@
 
                 <ListView Grid.Row="1" ItemsSource="{Binding CurrentOrder.Items}" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                           HorizontalContentAlignment="Stretch" Padding="0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -155,7 +155,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <materialDesign:PackIcon Kind="Receipt" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBlock Text="{Binding Id, StringFormat=ЧЕК #{0}}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Id, StringFormat=чек #{0}}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
@@ -163,7 +163,7 @@
                     <TabControl.ContentTemplate>
                         <DataTemplate>
                             <Grid Background="#EEEEEE">
-                                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" MaxHeight="500" Margin="10">
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="500" Margin="10">
                                     <materialDesign:Card Padding="0" UniformCornerRadius="4">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -197,7 +197,7 @@
                                                 </ListView.ItemTemplate>
                                             </ListView>
                                             <StackPanel Grid.Row="2" Background="#FAFAFA" >
-                                                <DockPanel LastChildFill="False">
+                                                <DockPanel LastChildFill="False" Margin="5">
                                                     <TextBlock Text="ИТОГО ПО ЧЕКУ:" FontWeight="Bold"/>
                                                     <TextBlock Text="{Binding TotalAmount, StringFormat={}{0:N0} ₽}" DockPanel.Dock="Right" FontWeight="Bold" FontSize="16" Foreground="Black"/>
                                                 </DockPanel>

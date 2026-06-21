@@ -23,7 +23,7 @@ namespace CafeClient.Pages
             _apiService = apiService;
 
             _dataRefreshTimer = new DispatcherTimer();
-            _dataRefreshTimer.Interval = TimeSpan.FromSeconds(10);
+            _dataRefreshTimer.Interval = TimeSpan.FromSeconds(5);
             _dataRefreshTimer.Tick += async (s, e) => await LoadKitchenOrders();
 
             _clockTimer = new DispatcherTimer();
@@ -96,43 +96,39 @@ namespace CafeClient.Pages
                 return;
             }
 
-            string nextStatus = "";
+            var nextStatus = "";
 
-            if (selectedOrder.Status == "Готовится") 
+            switch (selectedOrder.Status)
             {
-                nextStatus = "Готов";
+                case "Готовится":
+                    nextStatus = "Готов";
+                    break;
+                case "Готов":
+                    MessageBox.Show("Заказ уже готов и ожидает выдачи/оплаты.");
+                    return;
             }
-            else if (selectedOrder.Status == "Готов")
-            {
-                MessageBox.Show("Заказ уже готов и ожидает выдачи/оплаты.");
-                return;
-            }
-            
+
             var result = MessageBox.Show($"Изменить статус заказа №{selectedOrder.OrderId} на '{nextStatus}'?",
                 "Обновление статуса", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.Yes)
+            if (result != MessageBoxResult.Yes) return;
+            try
             {
-                try
-                {
-                    bool success = await _apiService.UpdateOrderStatusAsync(selectedOrder.OrderId, nextStatus);
+                var success = await _apiService.UpdateOrderStatusAsync(selectedOrder.OrderId, nextStatus);
 
-                    if (success)
-                    {
-                        await LoadKitchenOrders();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось обновить статус на сервере.");
-                    }
-                }
-                catch (Exception ex)
+                if (success)
                 {
-                    MessageBox.Show($"Ошибка: {ex.Message}");
+                    await LoadKitchenOrders();
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось обновить статус на сервере.");
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
         }
-        
-        
     }
 }
